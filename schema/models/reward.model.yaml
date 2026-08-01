@@ -1,0 +1,83 @@
+# =============================================================================
+# Domain: performance
+# Entity: Reward
+# Description: Recognition or bonus awarded to an employee. Non-monetary
+#              recognition lives here; if monetary, the *disbursement* stays in
+#              backbone-payroll (linked via `payroll_component_id`). A
+#              performance-driven bonus is the typical trigger for a
+#              payroll.CompensationChange.
+# =============================================================================
+
+models:
+  - name: Reward
+    collection: rewards
+    description: "Recognition or bonus awarded to an employee."
+
+    fields:
+      id:
+        type: uuid
+        attributes: ["@id", "@default(uuid)"]
+
+      company_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK organization.Company.id"
+
+      employee_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK employee.Employee.id"
+
+      cycle_id:
+        type: uuid?
+        attributes: ["@foreign_key(AppraisalCycle.id)"]
+        description: "# FK appraisal_cycles.id (in-module, optional)"
+
+      reward_type:
+        type: RewardType
+        attributes: ["@required", "@default(recognition)"]
+
+      title:
+        type: string
+        attributes: ["@required", "@max(180)"]
+
+      description:
+        type: string?
+
+      amount:
+        type: decimal?
+        attributes: ["@precision(18,2)", "@non_negative"]
+        description: "Monetary value (if any)"
+
+      awarded_by:
+        type: uuid?
+        attributes: ["@exclude_from_foreign_key_check"]
+        description: "# logical FK employee.Employee.id"
+
+      awarded_at:
+        type: date
+        attributes: ["@required"]
+
+      payroll_component_id:
+        type: uuid?
+        attributes: ["@exclude_from_foreign_key_check"]
+        description: "# logical FK payroll.SalaryComponent.id (disbursed via payroll if monetary)"
+
+      metadata:
+        type: Metadata
+        attributes: ["@audit_metadata"]
+
+    indexes:
+      - type: index
+        fields: [company_id, employee_id, awarded_at]
+
+enums:
+  - name: RewardType
+    description: "Kind of recognition / reward."
+    variants:
+      - name: recognition
+        default: true
+      - name: bonus
+      - name: gift
+      - name: leave_credit
+      - name: certificate

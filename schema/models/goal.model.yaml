@@ -1,0 +1,83 @@
+# =============================================================================
+# Domain: performance
+# Entity: Goal
+# Description: An OKR-style goal owned by an employee, optionally aligned to a
+#              parent goal (cascade: company -> team -> individual) via
+#              `parent_goal_id` (self-reference). May be tied to an appraisal
+#              cycle.
+# =============================================================================
+
+models:
+  - name: Goal
+    collection: goals
+    description: "An OKR-style goal owned by an employee (cascade via parent_goal_id)."
+
+    fields:
+      id:
+        type: uuid
+        attributes: ["@id", "@default(uuid)"]
+
+      company_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK organization.Company.id"
+
+      employee_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK employee.Employee.id"
+
+      cycle_id:
+        type: uuid?
+        attributes: ["@foreign_key(AppraisalCycle.id)"]
+        description: "# FK appraisal_cycles.id (in-module, optional)"
+
+      title:
+        type: string
+        attributes: ["@required", "@max(200)"]
+
+      description:
+        type: string?
+        description: "Goal detail / key results narrative"
+
+      weight:
+        type: decimal?
+        attributes: ["@precision(5,2)", "@non_negative"]
+        description: "Weighting within the cycle (0-100)"
+
+      progress:
+        type: decimal?
+        attributes: ["@precision(5,2)", "@non_negative"]
+        description: "Completion progress (0-100)"
+
+      parent_goal_id:
+        type: uuid?
+        attributes: ["@foreign_key(Goal.id)"]
+        description: "# FK goals.id (self-ref; OKR cascade alignment)"
+
+      status:
+        type: GoalStatus
+        attributes: ["@required", "@default(draft)"]
+
+      metadata:
+        type: Metadata
+        attributes: ["@audit_metadata"]
+
+    indexes:
+      - type: index
+        fields: [company_id, employee_id]
+      - type: index
+        fields: [cycle_id]
+      - type: index
+        fields: [parent_goal_id]
+
+enums:
+  - name: GoalStatus
+    description: "Goal lifecycle."
+    variants:
+      - name: draft
+        default: true
+      - name: active
+      - name: achieved
+      - name: missed
+      - name: cancelled

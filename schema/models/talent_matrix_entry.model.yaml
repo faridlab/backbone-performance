@@ -1,0 +1,57 @@
+# =============================================================================
+# Domain: performance
+# Entity: TalentMatrixEntry
+# Description: A 9-box / talent-matrix placement for an employee within a cycle.
+#              Stores `performance_score` x `potential_score` (each 1-9); the
+#              `box` label (e.g. "star"/"workhorse"/"question") is derived, not
+#              stored verbatim.
+# =============================================================================
+
+models:
+  - name: TalentMatrixEntry
+    collection: talent_matrix_entries
+    description: "9-box talent-matrix placement for an employee within a cycle."
+
+    fields:
+      id:
+        type: uuid
+        attributes: ["@id", "@default(uuid)"]
+
+      company_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK organization.Company.id"
+
+      employee_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK employee.Employee.id"
+
+      cycle_id:
+        type: uuid
+        attributes: ["@required", "@foreign_key(AppraisalCycle.id)"]
+        description: "# FK appraisal_cycles.id (in-module)"
+
+      performance_score:
+        type: integer
+        attributes: ["@required", "@non_negative"]
+        description: "Performance axis (1-9)"
+
+      potential_score:
+        type: integer
+        attributes: ["@required", "@non_negative"]
+        description: "Potential axis (1-9)"
+
+      box_label:
+        type: string?
+        attributes: ["@max(40)"]
+        description: "Derived 9-box label (e.g. star/workhorse/question)"
+
+      metadata:
+        type: Metadata
+        attributes: ["@audit_metadata"]
+
+    indexes:
+      - type: unique
+        fields: [company_id, employee_id, cycle_id]
+        where: "deleted_at IS NULL"

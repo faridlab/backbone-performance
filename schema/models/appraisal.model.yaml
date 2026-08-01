@@ -1,0 +1,71 @@
+# =============================================================================
+# Domain: performance
+# Entity: Appraisal
+# Description: A formal performance appraisal for an employee within a cycle,
+#              reviewed by a manager/reviewer. `overall_rating` can drive
+#              backbone-payroll merit increases (read-side, no direct write).
+# =============================================================================
+
+models:
+  - name: Appraisal
+    collection: appraisals
+    description: "A formal performance appraisal for an employee within a cycle."
+
+    fields:
+      id:
+        type: uuid
+        attributes: ["@id", "@default(uuid)"]
+
+      company_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK organization.Company.id"
+
+      employee_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK employee.Employee.id"
+
+      cycle_id:
+        type: uuid
+        attributes: ["@required", "@foreign_key(AppraisalCycle.id)"]
+        description: "# FK appraisal_cycles.id (in-module)"
+
+      reviewer_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK employee.Employee.id (manager/reviewer)"
+
+      status:
+        type: AppraisalStatus
+        attributes: ["@required", "@default(draft)"]
+
+      overall_rating:
+        type: decimal?
+        attributes: ["@precision(3,1)", "@non_negative"]
+        description: "Calibrated overall rating (e.g. 1-5 scale)"
+
+      submitted_at:
+        type: datetime?
+        description: "When the employee self-review / submission was finalized"
+
+      metadata:
+        type: Metadata
+        attributes: ["@audit_metadata"]
+
+    indexes:
+      - type: index
+        fields: [company_id, employee_id, cycle_id]
+      - type: index
+        fields: [cycle_id]
+
+enums:
+  - name: AppraisalStatus
+    description: "Appraisal lifecycle."
+    variants:
+      - name: draft
+        default: true
+      - name: self_review
+      - name: submitted
+      - name: calibrated
+      - name: finalized

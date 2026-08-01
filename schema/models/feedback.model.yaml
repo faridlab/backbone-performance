@@ -1,0 +1,70 @@
+# =============================================================================
+# Domain: performance
+# Entity: Feedback
+# Description: 360-degree feedback from one employee to another within a cycle.
+#              Collection is `performance_feedback` (avoids the reserved
+#              `feedback` word). May be anonymous.
+# =============================================================================
+
+models:
+  - name: Feedback
+    collection: performance_feedback
+    description: "360-degree feedback from one employee to another (optionally anonymous)."
+
+    fields:
+      id:
+        type: uuid
+        attributes: ["@id", "@default(uuid)"]
+
+      company_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK organization.Company.id"
+
+      cycle_id:
+        type: uuid?
+        attributes: ["@foreign_key(AppraisalCycle.id)"]
+        description: "# FK appraisal_cycles.id (in-module, optional)"
+
+      from_employee_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK employee.Employee.id (reviewer/peer)"
+
+      to_employee_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK employee.Employee.id (subject)"
+
+      content:
+        type: string
+        attributes: ["@required"]
+
+      is_anonymous:
+        type: boolean
+        attributes: ["@required", "@default(false)"]
+
+      relationship:
+        type: FeedbackRelationship
+        attributes: ["@default(peer)"]
+        description: "Reviewer's relationship to the subject"
+
+      metadata:
+        type: Metadata
+        attributes: ["@audit_metadata"]
+
+    indexes:
+      - type: index
+        fields: [company_id, to_employee_id]
+      - type: index
+        fields: [cycle_id]
+
+enums:
+  - name: FeedbackRelationship
+    description: "360-feedback reviewer relationship to the subject."
+    variants:
+      - name: peer
+        default: true
+      - name: manager
+      - name: direct_report
+      - name: cross_functional

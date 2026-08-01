@@ -1,0 +1,62 @@
+# =============================================================================
+# Domain: performance
+# Entity: AppraisalCycle
+# Description: A performance/appraisal period (e.g. "H1 2026"). Goals, appraisals,
+#              feedback, and talent-matrix entries are all scoped to a cycle.
+#              `cycle_type` is a free-form label (annual/quarterly/mid-year).
+# =============================================================================
+
+models:
+  - name: AppraisalCycle
+    collection: appraisal_cycles
+    description: "A performance/appraisal period (e.g. H1 2026)."
+
+    fields:
+      id:
+        type: uuid
+        attributes: ["@id", "@default(uuid)"]
+
+      company_id:
+        type: uuid
+        attributes: ["@required", "@exclude_from_foreign_key_check"]
+        description: "# logical FK organization.Company.id"
+
+      name:
+        type: string
+        attributes: ["@required", "@max(180)"]
+        description: "Cycle label (e.g. \"H1 2026\")"
+
+      cycle_type:
+        type: string?
+        attributes: ["@max(40)"]
+        description: "Cycle kind label (annual/quarterly/mid-year)"
+
+      period_start:
+        type: date
+        attributes: ["@required"]
+
+      period_end:
+        type: date
+        attributes: ["@required"]
+
+      status:
+        type: CycleStatus
+        attributes: ["@required", "@default(draft)"]
+
+      metadata:
+        type: Metadata
+        attributes: ["@audit_metadata"]
+
+    indexes:
+      - type: index
+        fields: [company_id, status]
+
+enums:
+  - name: CycleStatus
+    description: "Appraisal cycle lifecycle."
+    variants:
+      - name: draft
+        default: true
+      - name: open
+      - name: calibration
+      - name: closed
