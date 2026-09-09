@@ -14,9 +14,9 @@ pub mod reward_api_test;
 pub mod talent_matrix_entry_api_test;
 
 // Re-exports for convenience
-pub use crud_test_base::*;
 pub use appraisal_api_test::*;
 pub use appraisal_cycle_api_test::*;
+pub use crud_test_base::*;
 pub use feedback_api_test::*;
 pub use goal_api_test::*;
 pub use reward_api_test::*;
