@@ -15,6 +15,11 @@ user_owned:
   # - "src/application/service/onboarding_service.rs"
   # - "src/presentation/http/guarded_routes.rs"
 
+  # Hand-authored migrations (the guarded company-artifact strip — the strip's ordering
+  # guard is hand-authored logic, not schema-derived emission).
+  - "migrations/20260909120000_strip_tenancy.up.sql"
+  - "migrations/20260909120000_strip_tenancy.down.sql"
+
   # Behavior tests (the golden cases / oracle) + BDD features.
   - "tests/features/**"
   # - "tests/*_golden_cases.rs"

@@ -18,11 +18,6 @@ models:
         type: uuid
         attributes: ["@id", "@default(uuid)"]
 
-      company_id:
-        type: uuid
-        attributes: ["@required", "@exclude_from_foreign_key_check"]
-        description: "# logical FK organization.Company.id"
-
       employee_id:
         type: uuid
         attributes: ["@required", "@exclude_from_foreign_key_check"]
@@ -67,9 +62,8 @@ models:
         type: Metadata
         attributes: ["@audit_metadata"]
 
-    indexes:
-      - type: index
-        fields: [company_id, employee_id, awarded_at]
+    # No tenancy indexes (ADR-0029): the module is tenant-agnostic. The composing
+    # service's tenancy decorator installs the org-scoped lookup indexes.
 
 enums:
   - name: RewardType

@@ -17,11 +17,6 @@ models:
         type: uuid
         attributes: ["@id", "@default(uuid)"]
 
-      company_id:
-        type: uuid
-        attributes: ["@required", "@exclude_from_foreign_key_check"]
-        description: "# logical FK organization.Company.id"
-
       employee_id:
         type: uuid
         attributes: ["@required", "@exclude_from_foreign_key_check"]
@@ -51,7 +46,8 @@ models:
         type: Metadata
         attributes: ["@audit_metadata"]
 
-    indexes:
-      - type: unique
-        fields: [company_id, employee_id, cycle_id]
-        where: "deleted_at IS NULL"
+    # No tenancy indexes (ADR-0029): the module is tenant-agnostic. The one-placement-per-
+    # employee-per-cycle invariant is a DOMAIN rule, not a tenancy posture (an employee belongs
+    # to exactly one unit under any deployment), so it needs no tenant column — the strip
+    # migration restores it tenant-free; per-unit scope-leading uniques, when wanted, are
+    # installed by the composing service's tenancy decorator.

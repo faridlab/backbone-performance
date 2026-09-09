@@ -16,11 +16,6 @@ models:
         type: uuid
         attributes: ["@id", "@default(uuid)"]
 
-      company_id:
-        type: uuid
-        attributes: ["@required", "@exclude_from_foreign_key_check"]
-        description: "# logical FK organization.Company.id"
-
       cycle_id:
         type: uuid?
         attributes: ["@foreign_key(AppraisalCycle.id)"]
@@ -53,9 +48,9 @@ models:
         type: Metadata
         attributes: ["@audit_metadata"]
 
+    # No tenancy indexes (ADR-0029): the module is tenant-agnostic. The composing
+    # service's tenancy decorator installs the org-scoped lookup indexes.
     indexes:
-      - type: index
-        fields: [company_id, to_employee_id]
       - type: index
         fields: [cycle_id]
 

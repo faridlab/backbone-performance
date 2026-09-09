@@ -16,11 +16,6 @@ models:
         type: uuid
         attributes: ["@id", "@default(uuid)"]
 
-      company_id:
-        type: uuid
-        attributes: ["@required", "@exclude_from_foreign_key_check"]
-        description: "# logical FK organization.Company.id"
-
       name:
         type: string
         attributes: ["@required", "@max(180)"]
@@ -47,9 +42,8 @@ models:
         type: Metadata
         attributes: ["@audit_metadata"]
 
-    indexes:
-      - type: index
-        fields: [company_id, status]
+    # No tenancy indexes (ADR-0029): the module is tenant-agnostic. The composing
+    # service's tenancy decorator installs the org-scoped lookup indexes.
 
 enums:
   - name: CycleStatus
