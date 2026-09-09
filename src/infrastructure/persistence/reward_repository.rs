@@ -17,13 +17,13 @@ pub const TABLE_NAME: &str = "performance.rewards";
 ///
 /// All standard CRUD, soft-delete, pagination, and bulk methods are
 /// provided automatically via `Deref` to `backbone_orm::GenericCrudRepository`.
-pub struct RewardRepository(
-    backbone_orm::GenericCrudRepository<Reward, backbone_orm::SoftDelete>,
-);
+pub struct RewardRepository(backbone_orm::GenericCrudRepository<Reward, backbone_orm::SoftDelete>);
 
 impl std::ops::Deref for RewardRepository {
     type Target = backbone_orm::GenericCrudRepository<Reward, backbone_orm::SoftDelete>;
-    fn deref(&self) -> &Self::Target { &self.0 }
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
 impl RewardRepository {

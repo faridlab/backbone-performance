@@ -5,61 +5,37 @@
 //! This module provides DTOs for the presentation layer,
 //! with validation and OpenAPI schema support.
 
-pub mod appraisal_dto;
 pub mod appraisal_cycle_dto;
+pub mod appraisal_dto;
 pub mod feedback_dto;
 pub mod goal_dto;
 pub mod reward_dto;
 pub mod talent_matrix_entry_dto;
 
 // Re-exports
-pub use appraisal_dto::{
-    CreateAppraisalDto,
-    UpdateAppraisalDto,
-    PatchAppraisalDto,
-    AppraisalResponseDto,
-    AppraisalListResponseDto,
-    AppraisalSummaryDto,
-};
 pub use appraisal_cycle_dto::{
-    CreateAppraisalCycleDto,
-    UpdateAppraisalCycleDto,
-    PatchAppraisalCycleDto,
-    AppraisalCycleResponseDto,
-    AppraisalCycleListResponseDto,
-    AppraisalCycleSummaryDto,
+    AppraisalCycleListResponseDto, AppraisalCycleResponseDto, AppraisalCycleSummaryDto,
+    CreateAppraisalCycleDto, PatchAppraisalCycleDto, UpdateAppraisalCycleDto,
+};
+pub use appraisal_dto::{
+    AppraisalListResponseDto, AppraisalResponseDto, AppraisalSummaryDto, CreateAppraisalDto,
+    PatchAppraisalDto, UpdateAppraisalDto,
 };
 pub use feedback_dto::{
-    CreateFeedbackDto,
-    UpdateFeedbackDto,
-    PatchFeedbackDto,
-    FeedbackResponseDto,
-    FeedbackListResponseDto,
-    FeedbackSummaryDto,
+    CreateFeedbackDto, FeedbackListResponseDto, FeedbackResponseDto, FeedbackSummaryDto,
+    PatchFeedbackDto, UpdateFeedbackDto,
 };
 pub use goal_dto::{
-    CreateGoalDto,
+    CreateGoalDto, GoalListResponseDto, GoalResponseDto, GoalSummaryDto, PatchGoalDto,
     UpdateGoalDto,
-    PatchGoalDto,
-    GoalResponseDto,
-    GoalListResponseDto,
-    GoalSummaryDto,
 };
 pub use reward_dto::{
-    CreateRewardDto,
+    CreateRewardDto, PatchRewardDto, RewardListResponseDto, RewardResponseDto, RewardSummaryDto,
     UpdateRewardDto,
-    PatchRewardDto,
-    RewardResponseDto,
-    RewardListResponseDto,
-    RewardSummaryDto,
 };
 pub use talent_matrix_entry_dto::{
-    CreateTalentMatrixEntryDto,
-    UpdateTalentMatrixEntryDto,
-    PatchTalentMatrixEntryDto,
-    TalentMatrixEntryResponseDto,
-    TalentMatrixEntryListResponseDto,
-    TalentMatrixEntrySummaryDto,
+    CreateTalentMatrixEntryDto, PatchTalentMatrixEntryDto, TalentMatrixEntryListResponseDto,
+    TalentMatrixEntryResponseDto, TalentMatrixEntrySummaryDto, UpdateTalentMatrixEntryDto,
 };
 
 // Common pagination types
@@ -85,8 +61,12 @@ pub struct PaginationParams {
     pub sort_order: Option<String>,
 }
 
-fn default_page() -> u32 { 1 }
-fn default_per_page() -> u32 { 20 }
+fn default_page() -> u32 {
+    1
+}
+fn default_per_page() -> u32 {
+    20
+}
 
 /// API response wrapper
 #[derive(Debug, Clone, Serialize)]
@@ -111,7 +91,11 @@ pub struct ApiError {
 
 impl<T> ApiResponse<T> {
     pub fn ok(data: T) -> Self {
-        Self { success: true, data: Some(data), error: None }
+        Self {
+            success: true,
+            data: Some(data),
+            error: None,
+        }
     }
 
     pub fn err(code: impl Into<String>, message: impl Into<String>) -> Self {

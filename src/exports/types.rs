@@ -5,11 +5,11 @@
 //! These DTOs are the ONLY types other modules should use.
 //! They are decoupled from internal domain entities.
 
+use crate::domain::entity::*;
+use chrono::{DateTime, NaiveDate, Utc};
+use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use chrono::{DateTime, Utc, NaiveDate};
-use rust_decimal::Decimal;
-use crate::domain::entity::*;
 
 // ============================================================================
 // APPRAISAL TYPES
@@ -49,7 +49,6 @@ impl From<AppraisalId> for Uuid {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppraisalDto {
     pub id: AppraisalId,
-    pub company_id: Uuid,
     pub employee_id: Uuid,
     pub cycle_id: Uuid,
     pub reviewer_id: Uuid,
@@ -110,7 +109,6 @@ impl From<AppraisalCycleId> for Uuid {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppraisalCycleDto {
     pub id: AppraisalCycleId,
-    pub company_id: Uuid,
     pub name: String,
     pub cycle_type: Option<String>,
     pub period_start: NaiveDate,
@@ -171,7 +169,6 @@ impl From<FeedbackId> for Uuid {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FeedbackDto {
     pub id: FeedbackId,
-    pub company_id: Uuid,
     pub cycle_id: Option<Uuid>,
     pub from_employee_id: Uuid,
     pub to_employee_id: Uuid,
@@ -231,7 +228,6 @@ impl From<GoalId> for Uuid {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GoalDto {
     pub id: GoalId,
-    pub company_id: Uuid,
     pub employee_id: Uuid,
     pub cycle_id: Option<Uuid>,
     pub title: String,
@@ -295,7 +291,6 @@ impl From<RewardId> for Uuid {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RewardDto {
     pub id: RewardId,
-    pub company_id: Uuid,
     pub employee_id: Uuid,
     pub cycle_id: Option<Uuid>,
     pub reward_type: RewardType,
@@ -359,7 +354,6 @@ impl From<TalentMatrixEntryId> for Uuid {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TalentMatrixEntryDto {
     pub id: TalentMatrixEntryId,
-    pub company_id: Uuid,
     pub employee_id: Uuid,
     pub cycle_id: Uuid,
     pub performance_score: i32,

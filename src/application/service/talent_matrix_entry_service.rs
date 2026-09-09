@@ -7,9 +7,9 @@
 
 use backbone_core::GenericCrudService;
 
-use crate::presentation::dto::{CreateTalentMatrixEntryDto, UpdateTalentMatrixEntryDto};
 use crate::domain::entity::TalentMatrixEntry;
 use crate::infrastructure::persistence::TalentMatrixEntryRepository;
+use crate::presentation::dto::{CreateTalentMatrixEntryDto, UpdateTalentMatrixEntryDto};
 
 /// Application service for TalentMatrixEntry entities.
 ///

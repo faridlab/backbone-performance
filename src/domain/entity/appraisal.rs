@@ -1,8 +1,8 @@
 use chrono::{DateTime, Utc};
+use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
-use rust_decimal::Decimal;
 
 use super::AppraisalStatus;
 use super::AuditMetadata;
@@ -13,9 +13,15 @@ use super::AuditMetadata;
 pub struct AppraisalId(pub Uuid);
 
 impl AppraisalId {
-    pub fn new(id: Uuid) -> Self { Self(id) }
-    pub fn generate() -> Self { Self(Uuid::new_v4()) }
-    pub fn into_inner(self) -> Uuid { self.0 }
+    pub fn new(id: Uuid) -> Self {
+        Self(id)
+    }
+    pub fn generate() -> Self {
+        Self(Uuid::new_v4())
+    }
+    pub fn into_inner(self) -> Uuid {
+        self.0
+    }
 }
 
 impl std::fmt::Display for AppraisalId {
@@ -32,26 +38,33 @@ impl std::str::FromStr for AppraisalId {
 }
 
 impl From<Uuid> for AppraisalId {
-    fn from(id: Uuid) -> Self { Self(id) }
+    fn from(id: Uuid) -> Self {
+        Self(id)
+    }
 }
 
 impl From<AppraisalId> for Uuid {
-    fn from(id: AppraisalId) -> Self { id.0 }
+    fn from(id: AppraisalId) -> Self {
+        id.0
+    }
 }
 
 impl AsRef<Uuid> for AppraisalId {
-    fn as_ref(&self) -> &Uuid { &self.0 }
+    fn as_ref(&self) -> &Uuid {
+        &self.0
+    }
 }
 
 impl std::ops::Deref for AppraisalId {
     type Target = Uuid;
-    fn deref(&self) -> &Self::Target { &self.0 }
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct Appraisal {
     pub id: Uuid,
-    pub company_id: Uuid,
     pub employee_id: Uuid,
     pub cycle_id: Uuid,
     pub reviewer_id: Uuid,
@@ -66,14 +79,18 @@ pub struct Appraisal {
 impl Appraisal {
     /// Create a builder for Appraisal
     pub fn builder() -> AppraisalBuilder {
-        AppraisalBuilder::default()
+        <AppraisalBuilder as Default>::default()
     }
 
     /// Create a new Appraisal with required fields
-    pub fn new(company_id: Uuid, employee_id: Uuid, cycle_id: Uuid, reviewer_id: Uuid, status: AppraisalStatus) -> Self {
+    pub fn new(
+        employee_id: Uuid,
+        cycle_id: Uuid,
+        reviewer_id: Uuid,
+        status: AppraisalStatus,
+    ) -> Self {
         Self {
             id: Uuid::new_v4(),
-            company_id,
             employee_id,
             cycle_id,
             reviewer_id,
@@ -139,7 +156,6 @@ impl Appraisal {
         &self.status
     }
 
-
     // ==========================================================
     // Fluent Setters (with_* for optional fields)
     // ==========================================================
@@ -164,26 +180,35 @@ impl Appraisal {
     pub fn apply_patch(&mut self, fields: std::collections::HashMap<String, serde_json::Value>) {
         for (key, value) in fields {
             match key.as_str() {
-                "company_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.company_id = v; }
-                }
                 "employee_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.employee_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.employee_id = v;
+                    }
                 }
                 "cycle_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.cycle_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.cycle_id = v;
+                    }
                 }
                 "reviewer_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.reviewer_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.reviewer_id = v;
+                    }
                 }
                 "status" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.status = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.status = v;
+                    }
                 }
                 "overall_rating" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.overall_rating = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.overall_rating = v;
+                    }
                 }
                 "submitted_at" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.submitted_at = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.submitted_at = v;
+                    }
                 }
                 _ => {} // ignore unknown fields
             }
@@ -239,7 +264,6 @@ impl backbone_orm::EntityRepoMeta for Appraisal {
     fn column_types() -> std::collections::HashMap<String, String> {
         let mut m = std::collections::HashMap::new();
         m.insert("id".to_string(), "uuid".to_string());
-        m.insert("company_id".to_string(), "uuid".to_string());
         m.insert("employee_id".to_string(), "uuid".to_string());
         m.insert("cycle_id".to_string(), "uuid".to_string());
         m.insert("reviewer_id".to_string(), "uuid".to_string());
@@ -249,9 +273,6 @@ impl backbone_orm::EntityRepoMeta for Appraisal {
     fn search_fields() -> &'static [&'static str] {
         &[]
     }
-    fn company_field() -> Option<&'static str> {
-        Some("company_id")
-    }
 }
 
 /// Builder for Appraisal entity
@@ -260,7 +281,6 @@ impl backbone_orm::EntityRepoMeta for Appraisal {
 /// System fields (id, metadata, timestamps) are auto-initialized.
 #[derive(Debug, Clone, Default)]
 pub struct AppraisalBuilder {
-    company_id: Option<Uuid>,
     employee_id: Option<Uuid>,
     cycle_id: Option<Uuid>,
     reviewer_id: Option<Uuid>,
@@ -270,12 +290,6 @@ pub struct AppraisalBuilder {
 }
 
 impl AppraisalBuilder {
-    /// Set the company_id field (required)
-    pub fn company_id(mut self, value: Uuid) -> Self {
-        self.company_id = Some(value);
-        self
-    }
-
     /// Set the employee_id field (required)
     pub fn employee_id(mut self, value: Uuid) -> Self {
         self.employee_id = Some(value);
@@ -316,18 +330,22 @@ impl AppraisalBuilder {
     ///
     /// Returns Err if any required field without a default is missing.
     pub fn build(self) -> Result<Appraisal, String> {
-        let company_id = self.company_id.ok_or_else(|| "company_id is required".to_string())?;
-        let employee_id = self.employee_id.ok_or_else(|| "employee_id is required".to_string())?;
-        let cycle_id = self.cycle_id.ok_or_else(|| "cycle_id is required".to_string())?;
-        let reviewer_id = self.reviewer_id.ok_or_else(|| "reviewer_id is required".to_string())?;
+        let employee_id = self
+            .employee_id
+            .ok_or_else(|| "employee_id is required".to_string())?;
+        let cycle_id = self
+            .cycle_id
+            .ok_or_else(|| "cycle_id is required".to_string())?;
+        let reviewer_id = self
+            .reviewer_id
+            .ok_or_else(|| "reviewer_id is required".to_string())?;
 
         Ok(Appraisal {
             id: Uuid::new_v4(),
-            company_id,
             employee_id,
             cycle_id,
             reviewer_id,
-            status: self.status.unwrap_or(AppraisalStatus::default()),
+            status: self.status.unwrap_or_default(),
             overall_rating: self.overall_rating,
             submitted_at: self.submitted_at,
             metadata: AuditMetadata::default(),

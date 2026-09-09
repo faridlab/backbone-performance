@@ -5,8 +5,8 @@
 //! These handlers use Axum and backbone-core's BackboneCrudHandler
 //! to provide all 12 standard Backbone CRUD endpoints.
 
-pub mod appraisal_handler;
 pub mod appraisal_cycle_handler;
+pub mod appraisal_handler;
 pub mod feedback_handler;
 pub mod goal_handler;
 pub mod reward_handler;
@@ -16,11 +16,23 @@ pub mod talent_matrix_entry_handler;
 // END CUSTOM
 
 // Re-exports
-pub use appraisal_handler::{create_appraisal_routes, create_appraisal_read_routes, create_appraisal_write_routes};
-pub use appraisal_cycle_handler::{create_appraisal_cycle_routes, create_appraisal_cycle_read_routes, create_appraisal_cycle_write_routes};
-pub use feedback_handler::{create_feedback_routes, create_feedback_read_routes, create_feedback_write_routes};
-pub use goal_handler::{create_goal_routes, create_goal_read_routes, create_goal_write_routes};
-pub use reward_handler::{create_reward_routes, create_reward_read_routes, create_reward_write_routes};
-pub use talent_matrix_entry_handler::{create_talent_matrix_entry_routes, create_talent_matrix_entry_read_routes, create_talent_matrix_entry_write_routes};
+pub use appraisal_cycle_handler::{
+    create_appraisal_cycle_read_routes, create_appraisal_cycle_routes,
+    create_appraisal_cycle_write_routes,
+};
+pub use appraisal_handler::{
+    create_appraisal_read_routes, create_appraisal_routes, create_appraisal_write_routes,
+};
+pub use feedback_handler::{
+    create_feedback_read_routes, create_feedback_routes, create_feedback_write_routes,
+};
+pub use goal_handler::{create_goal_read_routes, create_goal_routes, create_goal_write_routes};
+pub use reward_handler::{
+    create_reward_read_routes, create_reward_routes, create_reward_write_routes,
+};
+pub use talent_matrix_entry_handler::{
+    create_talent_matrix_entry_read_routes, create_talent_matrix_entry_routes,
+    create_talent_matrix_entry_write_routes,
+};
 // <<< CUSTOM
 // END CUSTOM

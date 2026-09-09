@@ -9,15 +9,15 @@ use anyhow::Result;
 use async_trait::async_trait;
 use sqlx::PgPool;
 
-mod appraisal_seeder;
 mod appraisal_cycle_seeder;
+mod appraisal_seeder;
 mod feedback_seeder;
 mod goal_seeder;
 mod reward_seeder;
 mod talent_matrix_entry_seeder;
 
-pub use appraisal_seeder::SeedAppraisalSeeder;
 pub use appraisal_cycle_seeder::SeedAppraisalCycleSeeder;
+pub use appraisal_seeder::SeedAppraisalSeeder;
 pub use feedback_seeder::SeedFeedbackSeeder;
 pub use goal_seeder::SeedGoalSeeder;
 pub use reward_seeder::SeedRewardSeeder;
@@ -72,4 +72,3 @@ pub enum SeederType {
 // <<< CUSTOM SEEDERS START >>>
 // Add custom seeders here
 // <<< CUSTOM SEEDERS END >>>
-

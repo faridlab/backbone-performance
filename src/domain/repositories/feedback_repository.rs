@@ -5,8 +5,8 @@
 //! This trait defines the repository contract for the Feedback aggregate.
 //! Implementation is in the infrastructure layer.
 
-use async_trait::async_trait;
 use anyhow::Result;
+use async_trait::async_trait;
 use uuid::Uuid;
 
 use crate::domain::entity::{Feedback, FeedbackRelationship};
@@ -44,7 +44,6 @@ pub struct FeedbackPaginatedResult {
 /// Filter parameters for list queries
 #[derive(Debug, Clone, Default)]
 pub struct FeedbackFilter {
-    pub company_id: Option<Uuid>,
     pub cycle_id: Option<Uuid>,
     pub from_employee_id: Option<Uuid>,
     pub to_employee_id: Option<Uuid>,
@@ -56,7 +55,12 @@ pub struct FeedbackFilter {
 impl FeedbackFilter {
     /// Check if any filter is set
     pub fn has_filters(&self) -> bool {
-        self.company_id.is_some() || self.cycle_id.is_some() || self.from_employee_id.is_some() || self.to_employee_id.is_some() || self.content.is_some() || self.is_anonymous.is_some() || self.relationship.is_some()
+        self.cycle_id.is_some()
+            || self.from_employee_id.is_some()
+            || self.to_employee_id.is_some()
+            || self.content.is_some()
+            || self.is_anonymous.is_some()
+            || self.relationship.is_some()
     }
 }
 
@@ -66,7 +70,6 @@ impl FeedbackFilter {
 /// Implementations should be in the infrastructure layer.
 #[async_trait]
 pub trait FeedbackRepository: Send + Sync {
-
     // =========================================================================
     // Core CRUD Operations
     // =========================================================================
@@ -94,7 +97,11 @@ pub trait FeedbackRepository: Send + Sync {
     async fn list(&self, params: FeedbackPaginationParams) -> Result<FeedbackPaginatedResult>;
 
     /// List feedback with pagination and filters
-    async fn list_with_filters(&self, params: FeedbackPaginationParams, filters: FeedbackFilter) -> Result<FeedbackPaginatedResult>;
+    async fn list_with_filters(
+        &self,
+        params: FeedbackPaginationParams,
+        filters: FeedbackFilter,
+    ) -> Result<FeedbackPaginatedResult>;
 
     /// Count all feedback entities
     async fn count(&self) -> Result<u64>;
@@ -116,7 +123,10 @@ pub trait FeedbackRepository: Send + Sync {
     async fn restore(&self, id: &str) -> Result<Option<Feedback>>;
 
     /// List soft-deleted feedback entities
-    async fn list_deleted(&self, params: FeedbackPaginationParams) -> Result<FeedbackPaginatedResult>;
+    async fn list_deleted(
+        &self,
+        params: FeedbackPaginationParams,
+    ) -> Result<FeedbackPaginatedResult>;
 
     /// Empty trash (permanently delete all soft-deleted entities)
     async fn empty_trash(&self) -> Result<u64>;

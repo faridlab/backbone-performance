@@ -5,9 +5,9 @@
 //! Returns an `EntityValidator<AppraisalCycle>` pre-loaded with schema-derived
 //! field rules. Extend in the `// <<< CUSTOM` zone.
 
-use backbone_core::{EntityValidator, ValidationErrors, ValidationError};
-use backbone_core::{OptionalNotBlank, RequiredString};
 use crate::domain::entity::AppraisalCycle;
+use backbone_core::{EntityValidator, ValidationError, ValidationErrors};
+use backbone_core::{OptionalNotBlank, RequiredString};
 
 /// Validator type alias for AppraisalCycle entities.
 pub type AppraisalCycleValidator = EntityValidator<AppraisalCycle>;
@@ -16,7 +16,9 @@ pub type AppraisalCycleValidator = EntityValidator<AppraisalCycle>;
 pub fn appraisal_cycle_validator() -> AppraisalCycleValidator {
     EntityValidator::new()
         .rule(RequiredString::new("name", |e: &AppraisalCycle| &e.name))
-        .rule(OptionalNotBlank::new("cycle_type", |e: &AppraisalCycle| e.cycle_type.as_deref()))
+        .rule(OptionalNotBlank::new("cycle_type", |e: &AppraisalCycle| {
+            e.cycle_type.as_deref()
+        }))
     // <<< CUSTOM RULES
     // END CUSTOM RULES
 }

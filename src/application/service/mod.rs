@@ -7,8 +7,8 @@
 pub mod error;
 pub use error::{ServiceError, ServiceResult};
 
-pub mod appraisal_service;
 pub mod appraisal_cycle_service;
+pub mod appraisal_service;
 pub mod feedback_service;
 pub mod goal_service;
 pub mod reward_service;
@@ -17,8 +17,8 @@ pub mod talent_matrix_entry_service;
 // <<< CUSTOM
 // END CUSTOM
 
-pub use appraisal_service::AppraisalService;
 pub use appraisal_cycle_service::AppraisalCycleService;
+pub use appraisal_service::AppraisalService;
 pub use feedback_service::FeedbackService;
 pub use goal_service::GoalService;
 pub use reward_service::RewardService;

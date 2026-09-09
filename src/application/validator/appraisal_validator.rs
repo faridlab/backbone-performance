@@ -5,9 +5,9 @@
 //! Returns an `EntityValidator<Appraisal>` pre-loaded with schema-derived
 //! field rules. Extend in the `// <<< CUSTOM` zone.
 
-use backbone_core::{EntityValidator, ValidationErrors, ValidationError};
-use backbone_core::{NonNegative};
 use crate::domain::entity::Appraisal;
+use backbone_core::NonNegative;
+use backbone_core::{EntityValidator, ValidationError, ValidationErrors};
 
 /// Validator type alias for Appraisal entities.
 pub type AppraisalValidator = EntityValidator<Appraisal>;
@@ -17,7 +17,7 @@ pub fn appraisal_validator() -> AppraisalValidator {
     EntityValidator::new()
     // <<< CUSTOM RULES
     // END CUSTOM RULES
-        // No schema-derived rules — add custom rules above.
+    // No schema-derived rules — add custom rules above.
 }
 
 // <<< CUSTOM

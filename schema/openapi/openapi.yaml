@@ -2227,7 +2227,6 @@ components:
       type: object
       required:
         - id
-        - company_id
         - employee_id
         - cycle_id
         - reviewer_id
@@ -2235,9 +2234,6 @@ components:
         - metadata
       properties:
         id:
-          type: string
-          format: uuid
-        company_id:
           type: string
           format: uuid
         employee_id:
@@ -2277,16 +2273,12 @@ components:
     CreateAppraisalRequest:
       type: object
       required:
-        - company_id
         - employee_id
         - cycle_id
         - reviewer_id
         - status
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -2311,16 +2303,12 @@ components:
     UpdateAppraisalRequest:
       type: object
       required:
-        - company_id
         - employee_id
         - cycle_id
         - reviewer_id
         - status
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -2345,9 +2333,6 @@ components:
     PatchAppraisalRequest:
       type: object
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -2383,7 +2368,6 @@ components:
       type: object
       required:
         - id
-        - company_id
         - name
         - period_start
         - period_end
@@ -2391,9 +2375,6 @@ components:
         - metadata
       properties:
         id:
-          type: string
-          format: uuid
-        company_id:
           type: string
           format: uuid
         name:
@@ -2430,16 +2411,12 @@ components:
     CreateAppraisalCycleRequest:
       type: object
       required:
-        - company_id
         - name
         - period_start
         - period_end
         - status
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         name:
           type: string
           maxLength: 180
@@ -2461,16 +2438,12 @@ components:
     UpdateAppraisalCycleRequest:
       type: object
       required:
-        - company_id
         - name
         - period_start
         - period_end
         - status
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         name:
           type: string
           maxLength: 180
@@ -2492,9 +2465,6 @@ components:
     PatchAppraisalCycleRequest:
       type: object
       properties:
-        company_id:
-          type: string
-          format: uuid
         name:
           type: string
           maxLength: 180
@@ -2527,7 +2497,6 @@ components:
       type: object
       required:
         - id
-        - company_id
         - from_employee_id
         - to_employee_id
         - content
@@ -2536,9 +2505,6 @@ components:
         - metadata
       properties:
         id:
-          type: string
-          format: uuid
-        company_id:
           type: string
           format: uuid
         cycle_id:
@@ -2576,7 +2542,6 @@ components:
     CreateFeedbackRequest:
       type: object
       required:
-        - company_id
         - from_employee_id
         - to_employee_id
         - content
@@ -2584,9 +2549,6 @@ components:
         - relationship
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         cycle_id:
           nullable: true
           type: string
@@ -2609,7 +2571,6 @@ components:
     UpdateFeedbackRequest:
       type: object
       required:
-        - company_id
         - from_employee_id
         - to_employee_id
         - content
@@ -2617,9 +2578,6 @@ components:
         - relationship
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         cycle_id:
           nullable: true
           type: string
@@ -2642,9 +2600,6 @@ components:
     PatchFeedbackRequest:
       type: object
       properties:
-        company_id:
-          type: string
-          format: uuid
         cycle_id:
           nullable: true
           type: string
@@ -2678,16 +2633,12 @@ components:
       type: object
       required:
         - id
-        - company_id
         - employee_id
         - title
         - status
         - metadata
       properties:
         id:
-          type: string
-          format: uuid
-        company_id:
           type: string
           format: uuid
         employee_id:
@@ -2734,15 +2685,11 @@ components:
     CreateGoalRequest:
       type: object
       required:
-        - company_id
         - employee_id
         - title
         - status
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -2774,15 +2721,11 @@ components:
     UpdateGoalRequest:
       type: object
       required:
-        - company_id
         - employee_id
         - title
         - status
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -2814,9 +2757,6 @@ components:
     PatchGoalRequest:
       type: object
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -2859,7 +2799,6 @@ components:
       type: object
       required:
         - id
-        - company_id
         - employee_id
         - reward_type
         - title
@@ -2867,9 +2806,6 @@ components:
         - metadata
       properties:
         id:
-          type: string
-          format: uuid
-        company_id:
           type: string
           format: uuid
         employee_id:
@@ -2920,16 +2856,12 @@ components:
     CreateRewardRequest:
       type: object
       required:
-        - company_id
         - employee_id
         - reward_type
         - title
         - awarded_at
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -2965,16 +2897,12 @@ components:
     UpdateRewardRequest:
       type: object
       required:
-        - company_id
         - employee_id
         - reward_type
         - title
         - awarded_at
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -3010,9 +2938,6 @@ components:
     PatchRewardRequest:
       type: object
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -3059,7 +2984,6 @@ components:
       type: object
       required:
         - id
-        - company_id
         - employee_id
         - cycle_id
         - performance_score
@@ -3067,9 +2991,6 @@ components:
         - metadata
       properties:
         id:
-          type: string
-          format: uuid
-        company_id:
           type: string
           format: uuid
         employee_id:
@@ -3107,16 +3028,12 @@ components:
     CreateTalentMatrixEntryRequest:
       type: object
       required:
-        - company_id
         - employee_id
         - cycle_id
         - performance_score
         - potential_score
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -3139,16 +3056,12 @@ components:
     UpdateTalentMatrixEntryRequest:
       type: object
       required:
-        - company_id
         - employee_id
         - cycle_id
         - performance_score
         - potential_score
         - metadata
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid
@@ -3171,9 +3084,6 @@ components:
     PatchTalentMatrixEntryRequest:
       type: object
       properties:
-        company_id:
-          type: string
-          format: uuid
         employee_id:
           type: string
           format: uuid

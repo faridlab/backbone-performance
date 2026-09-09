@@ -8,10 +8,10 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use axum::Router;
+use chrono::NaiveDate;
+use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use chrono::{NaiveDate};
-use rust_decimal::Decimal;
 
 // Backbone framework imports
 use backbone_core::http::BackboneCrudHandler;
@@ -23,12 +23,13 @@ use backbone_auth::middleware::AuthContext;
 use backbone_auth::AuthMiddleware;
 
 // Domain imports
-use crate::domain::entity::*;
 use crate::application::service::{RewardService, ServiceError};
+use crate::domain::entity::*;
 
 // DTO imports
-use crate::presentation::dto::{CreateRewardDto, UpdateRewardDto, PatchRewardDto, RewardResponseDto};
-
+use crate::presentation::dto::{
+    CreateRewardDto, PatchRewardDto, RewardResponseDto, UpdateRewardDto,
+};
 
 /// Application error type
 #[derive(Debug, thiserror::Error)]
@@ -132,6 +133,13 @@ pub fn create_reward_read_routes(service: Arc<RewardService>) -> Router {
 ///
 /// These routes must NOT be publicly exposed. Wrap them with an auth
 /// middleware before nesting into the application router.
+///
+/// # This is unguarded generic CRUD, not a validated write path
+///
+/// These are plain create/update/patch/delete mutations over the entity row —
+/// they bypass all business invariants. If the module exposes a validated write
+/// service (e.g. a command router over its domain engine), serve THAT instead
+/// for any mutation that must respect domain rules.
 pub fn create_reward_write_routes(service: Arc<RewardService>) -> Router {
     BackboneCrudHandler::<RewardService, Reward, CreateRewardDto, UpdateRewardDto, RewardResponseDto>::write_routes(
         service,
@@ -153,31 +161,35 @@ pub fn create_protected_reward_routes<A: AuthMiddleware + Send + Sync + 'static>
     use axum::response::IntoResponse;
 
     let auth_layer = auth.clone();
-    create_reward_routes(service)
-        .layer(middleware::from_fn(move |mut req: axum::extract::Request, next: axum::middleware::Next| {
+    create_reward_routes(service).layer(middleware::from_fn(
+        move |mut req: axum::extract::Request, next: axum::middleware::Next| {
             let auth = auth_layer.clone();
             async move {
-                let token = req.headers()
+                let token = req
+                    .headers()
                     .get(axum::http::header::AUTHORIZATION)
                     .and_then(|h| h.to_str().ok())
-                    .and_then(|raw| raw.strip_prefix("Bearer ").or_else(|| raw.strip_prefix("bearer ")))
+                    .and_then(|raw| {
+                        raw.strip_prefix("Bearer ")
+                            .or_else(|| raw.strip_prefix("bearer "))
+                    })
                     .unwrap_or("");
                 match auth.authenticate(token).await {
                     Ok(ctx) => {
                         req.extensions_mut().insert(ctx);
                         next.run(req).await
                     }
-                    Err(_) => {
-                        (axum::http::StatusCode::UNAUTHORIZED,
-                         axum::Json(serde_json::json!({
-                             "success": false,
-                             "error": "unauthorized",
-                             "message": "Authentication required"
-                         }))
-                        ).into_response()
-                    }
+                    Err(_) => (
+                        axum::http::StatusCode::UNAUTHORIZED,
+                        axum::Json(serde_json::json!({
+                            "success": false,
+                            "error": "unauthorized",
+                            "message": "Authentication required"
+                        })),
+                    )
+                        .into_response(),
                 }
             }
-        }))
+        },
+    ))
 }
-

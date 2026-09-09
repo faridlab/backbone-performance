@@ -18,12 +18,12 @@
 #![allow(unused_imports)]
 
 // Generated modules
-pub mod domain;
-pub mod infrastructure;
 pub mod application;
+pub mod domain;
+pub mod exports;
+pub mod infrastructure;
 pub mod presentation;
 pub mod seeders;
-pub mod exports;
 
 // Re-exports for convenience - Domain entities
 pub use domain::entity::*;
@@ -32,8 +32,8 @@ pub use domain::entity::*;
 pub use infrastructure::persistence::*;
 
 // Re-exports - Application services
-pub use application::service::AppraisalService;
 pub use application::service::AppraisalCycleService;
+pub use application::service::AppraisalService;
 pub use application::service::FeedbackService;
 pub use application::service::GoalService;
 pub use application::service::RewardService;
@@ -42,9 +42,9 @@ pub use application::service::TalentMatrixEntryService;
 // Re-exports - Workflows
 pub use application::workflows::*;
 
-use std::sync::Arc;
 use axum::Router;
 use sqlx::PgPool;
+use std::sync::Arc;
 
 /// Performance module configuration
 ///
@@ -82,21 +82,21 @@ impl PerformanceModule {
     /// real deployment; use this only in trusted/admin/seeding contexts.
     pub fn all_crud_routes(&self) -> Router {
         use presentation::http::{
-            create_appraisal_routes,
-            create_appraisal_cycle_routes,
-            create_feedback_routes,
-            create_goal_routes,
-            create_reward_routes,
-            create_talent_matrix_entry_routes,
+            create_appraisal_cycle_routes, create_appraisal_routes, create_feedback_routes,
+            create_goal_routes, create_reward_routes, create_talent_matrix_entry_routes,
         };
 
         Router::new()
             .merge(create_appraisal_routes(self.appraisal_service.clone()))
-            .merge(create_appraisal_cycle_routes(self.appraisal_cycle_service.clone()))
+            .merge(create_appraisal_cycle_routes(
+                self.appraisal_cycle_service.clone(),
+            ))
             .merge(create_feedback_routes(self.feedback_service.clone()))
             .merge(create_goal_routes(self.goal_service.clone()))
             .merge(create_reward_routes(self.reward_service.clone()))
-            .merge(create_talent_matrix_entry_routes(self.talent_matrix_entry_service.clone()))
+            .merge(create_talent_matrix_entry_routes(
+                self.talent_matrix_entry_service.clone(),
+            ))
     }
 
     /// Deprecated alias for [`Self::all_crud_routes`]. `routes()` reads like
@@ -104,10 +104,40 @@ impl PerformanceModule {
     /// mount exposes unguarded writes. Compose a guarded router (read + validated
     /// writes) for production, or call `all_crud_routes()` to opt into the full
     /// unguarded surface explicitly.
-    #[deprecated(note = "mounts unvalidated generic CRUD on every entity; compose a guarded router for production, or call all_crud_routes() for the intentional full/unguarded surface")]
+    #[deprecated(
+        note = "mounts unvalidated generic CRUD; prefer readonly_routes() + validated writes, or all_crud_routes() for the full/unguarded surface"
+    )]
     pub fn routes(&self) -> Router {
         self.all_crud_routes()
     }
+
+    /// Read-only routes for every entity (GET endpoints only) — the safe base.
+    ///
+    /// Generic mutation can't reach here, so this surface cannot bypass a
+    /// validated write service's invariants. Use this as the production base and
+    /// merge validated write routes (or a write service's HTTP layer) onto it.
+    pub fn readonly_routes(&self) -> Router {
+        use presentation::http::{
+            create_appraisal_cycle_read_routes, create_appraisal_read_routes,
+            create_feedback_read_routes, create_goal_read_routes, create_reward_read_routes,
+            create_talent_matrix_entry_read_routes,
+        };
+
+        Router::new()
+            .merge(create_appraisal_read_routes(self.appraisal_service.clone()))
+            .merge(create_appraisal_cycle_read_routes(
+                self.appraisal_cycle_service.clone(),
+            ))
+            .merge(create_feedback_read_routes(self.feedback_service.clone()))
+            .merge(create_goal_read_routes(self.goal_service.clone()))
+            .merge(create_reward_read_routes(self.reward_service.clone()))
+            .merge(create_talent_matrix_entry_read_routes(
+                self.talent_matrix_entry_service.clone(),
+            ))
+    }
+
+    // <<< CUSTOM METHODS
+    // END CUSTOM
 }
 
 /// Builder for PerformanceModule
@@ -118,9 +148,7 @@ pub struct PerformanceModuleBuilder {
 impl PerformanceModuleBuilder {
     /// Create a new builder
     pub fn new() -> Self {
-        Self {
-            db_pool: None,
-        }
+        Self { db_pool: None }
     }
 
     /// Set the database connection pool
@@ -134,20 +162,27 @@ impl PerformanceModuleBuilder {
 
     /// Build the module with configured dependencies
     pub fn build(self) -> anyhow::Result<PerformanceModule> {
-        let db_pool = self.db_pool
+        let db_pool = self
+            .db_pool
             .ok_or_else(|| anyhow::anyhow!("Database pool not configured"))?;
 
         // Appraisal service
         let appraisal_repository = Arc::new(AppraisalRepository::new(db_pool.clone()));
-        let appraisal_service = Arc::new(AppraisalService::with_repository(appraisal_repository.clone()));
+        let appraisal_service = Arc::new(AppraisalService::with_repository(
+            appraisal_repository.clone(),
+        ));
 
         // AppraisalCycle service
         let appraisal_cycle_repository = Arc::new(AppraisalCycleRepository::new(db_pool.clone()));
-        let appraisal_cycle_service = Arc::new(AppraisalCycleService::with_repository(appraisal_cycle_repository.clone()));
+        let appraisal_cycle_service = Arc::new(AppraisalCycleService::with_repository(
+            appraisal_cycle_repository.clone(),
+        ));
 
         // Feedback service
         let feedback_repository = Arc::new(FeedbackRepository::new(db_pool.clone()));
-        let feedback_service = Arc::new(FeedbackService::with_repository(feedback_repository.clone()));
+        let feedback_service = Arc::new(FeedbackService::with_repository(
+            feedback_repository.clone(),
+        ));
 
         // Goal service
         let goal_repository = Arc::new(GoalRepository::new(db_pool.clone()));
@@ -158,8 +193,11 @@ impl PerformanceModuleBuilder {
         let reward_service = Arc::new(RewardService::with_repository(reward_repository.clone()));
 
         // TalentMatrixEntry service
-        let talent_matrix_entry_repository = Arc::new(TalentMatrixEntryRepository::new(db_pool.clone()));
-        let talent_matrix_entry_service = Arc::new(TalentMatrixEntryService::with_repository(talent_matrix_entry_repository.clone()));
+        let talent_matrix_entry_repository =
+            Arc::new(TalentMatrixEntryRepository::new(db_pool.clone()));
+        let talent_matrix_entry_service = Arc::new(TalentMatrixEntryService::with_repository(
+            talent_matrix_entry_repository.clone(),
+        ));
 
         // <<< CUSTOM
         // END CUSTOM

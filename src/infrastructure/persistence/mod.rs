@@ -4,8 +4,8 @@
 //!
 //! Uses backbone-orm's `DatabaseOperations<T>` trait.
 
-mod appraisal_repository;
 mod appraisal_cycle_repository;
+mod appraisal_repository;
 mod feedback_repository;
 mod goal_repository;
 mod reward_repository;
@@ -16,8 +16,8 @@ mod talent_matrix_entry_repository;
 // END CUSTOM
 
 // Re-exports
-pub use appraisal_repository::AppraisalRepository;
 pub use appraisal_cycle_repository::AppraisalCycleRepository;
+pub use appraisal_repository::AppraisalRepository;
 pub use feedback_repository::FeedbackRepository;
 pub use goal_repository::GoalRepository;
 pub use reward_repository::RewardRepository;
@@ -25,9 +25,8 @@ pub use talent_matrix_entry_repository::TalentMatrixEntryRepository;
 
 // Re-export backbone-orm types
 pub use backbone_orm::repository::{
-    DatabaseOperations, PostgresRepository,
-    PaginationParams, PaginationInfo, PaginatedResult,
-    FilterParams, FilterCondition, SortParams, SortDirection,
+    DatabaseOperations, FilterCondition, FilterParams, PaginatedResult, PaginationInfo,
+    PaginationParams, PostgresRepository, SortDirection, SortParams,
 };
 
 // Re-export custom persistence types

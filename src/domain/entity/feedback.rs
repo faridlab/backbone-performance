@@ -3,8 +3,8 @@ use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
 
-use super::FeedbackRelationship;
 use super::AuditMetadata;
+use super::FeedbackRelationship;
 
 /// Strongly-typed ID for Feedback
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -12,9 +12,15 @@ use super::AuditMetadata;
 pub struct FeedbackId(pub Uuid);
 
 impl FeedbackId {
-    pub fn new(id: Uuid) -> Self { Self(id) }
-    pub fn generate() -> Self { Self(Uuid::new_v4()) }
-    pub fn into_inner(self) -> Uuid { self.0 }
+    pub fn new(id: Uuid) -> Self {
+        Self(id)
+    }
+    pub fn generate() -> Self {
+        Self(Uuid::new_v4())
+    }
+    pub fn into_inner(self) -> Uuid {
+        self.0
+    }
 }
 
 impl std::fmt::Display for FeedbackId {
@@ -31,26 +37,33 @@ impl std::str::FromStr for FeedbackId {
 }
 
 impl From<Uuid> for FeedbackId {
-    fn from(id: Uuid) -> Self { Self(id) }
+    fn from(id: Uuid) -> Self {
+        Self(id)
+    }
 }
 
 impl From<FeedbackId> for Uuid {
-    fn from(id: FeedbackId) -> Self { id.0 }
+    fn from(id: FeedbackId) -> Self {
+        id.0
+    }
 }
 
 impl AsRef<Uuid> for FeedbackId {
-    fn as_ref(&self) -> &Uuid { &self.0 }
+    fn as_ref(&self) -> &Uuid {
+        &self.0
+    }
 }
 
 impl std::ops::Deref for FeedbackId {
     type Target = Uuid;
-    fn deref(&self) -> &Self::Target { &self.0 }
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct Feedback {
     pub id: Uuid,
-    pub company_id: Uuid,
     pub cycle_id: Option<Uuid>,
     pub from_employee_id: Uuid,
     pub to_employee_id: Uuid,
@@ -65,14 +78,19 @@ pub struct Feedback {
 impl Feedback {
     /// Create a builder for Feedback
     pub fn builder() -> FeedbackBuilder {
-        FeedbackBuilder::default()
+        <FeedbackBuilder as Default>::default()
     }
 
     /// Create a new Feedback with required fields
-    pub fn new(company_id: Uuid, from_employee_id: Uuid, to_employee_id: Uuid, content: String, is_anonymous: bool, relationship: FeedbackRelationship) -> Self {
+    pub fn new(
+        from_employee_id: Uuid,
+        to_employee_id: Uuid,
+        content: String,
+        is_anonymous: bool,
+        relationship: FeedbackRelationship,
+    ) -> Self {
         Self {
             id: Uuid::new_v4(),
-            company_id,
             cycle_id: None,
             from_employee_id,
             to_employee_id,
@@ -133,7 +151,6 @@ impl Feedback {
         self.metadata.deleted_by.as_ref()
     }
 
-
     // ==========================================================
     // Fluent Setters (with_* for optional fields)
     // ==========================================================
@@ -152,26 +169,35 @@ impl Feedback {
     pub fn apply_patch(&mut self, fields: std::collections::HashMap<String, serde_json::Value>) {
         for (key, value) in fields {
             match key.as_str() {
-                "company_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.company_id = v; }
-                }
                 "cycle_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.cycle_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.cycle_id = v;
+                    }
                 }
                 "from_employee_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.from_employee_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.from_employee_id = v;
+                    }
                 }
                 "to_employee_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.to_employee_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.to_employee_id = v;
+                    }
                 }
                 "content" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.content = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.content = v;
+                    }
                 }
                 "is_anonymous" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.is_anonymous = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.is_anonymous = v;
+                    }
                 }
                 "relationship" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.relationship = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.relationship = v;
+                    }
                 }
                 _ => {} // ignore unknown fields
             }
@@ -227,18 +253,17 @@ impl backbone_orm::EntityRepoMeta for Feedback {
     fn column_types() -> std::collections::HashMap<String, String> {
         let mut m = std::collections::HashMap::new();
         m.insert("id".to_string(), "uuid".to_string());
-        m.insert("company_id".to_string(), "uuid".to_string());
         m.insert("cycle_id".to_string(), "uuid".to_string());
         m.insert("from_employee_id".to_string(), "uuid".to_string());
         m.insert("to_employee_id".to_string(), "uuid".to_string());
-        m.insert("relationship".to_string(), "feedback_relationship".to_string());
+        m.insert(
+            "relationship".to_string(),
+            "feedback_relationship".to_string(),
+        );
         m
     }
     fn search_fields() -> &'static [&'static str] {
         &["content"]
-    }
-    fn company_field() -> Option<&'static str> {
-        Some("company_id")
     }
 }
 
@@ -248,7 +273,6 @@ impl backbone_orm::EntityRepoMeta for Feedback {
 /// System fields (id, metadata, timestamps) are auto-initialized.
 #[derive(Debug, Clone, Default)]
 pub struct FeedbackBuilder {
-    company_id: Option<Uuid>,
     cycle_id: Option<Uuid>,
     from_employee_id: Option<Uuid>,
     to_employee_id: Option<Uuid>,
@@ -258,12 +282,6 @@ pub struct FeedbackBuilder {
 }
 
 impl FeedbackBuilder {
-    /// Set the company_id field (required)
-    pub fn company_id(mut self, value: Uuid) -> Self {
-        self.company_id = Some(value);
-        self
-    }
-
     /// Set the cycle_id field (optional)
     pub fn cycle_id(mut self, value: Uuid) -> Self {
         self.cycle_id = Some(value);
@@ -304,20 +322,24 @@ impl FeedbackBuilder {
     ///
     /// Returns Err if any required field without a default is missing.
     pub fn build(self) -> Result<Feedback, String> {
-        let company_id = self.company_id.ok_or_else(|| "company_id is required".to_string())?;
-        let from_employee_id = self.from_employee_id.ok_or_else(|| "from_employee_id is required".to_string())?;
-        let to_employee_id = self.to_employee_id.ok_or_else(|| "to_employee_id is required".to_string())?;
-        let content = self.content.ok_or_else(|| "content is required".to_string())?;
+        let from_employee_id = self
+            .from_employee_id
+            .ok_or_else(|| "from_employee_id is required".to_string())?;
+        let to_employee_id = self
+            .to_employee_id
+            .ok_or_else(|| "to_employee_id is required".to_string())?;
+        let content = self
+            .content
+            .ok_or_else(|| "content is required".to_string())?;
 
         Ok(Feedback {
             id: Uuid::new_v4(),
-            company_id,
             cycle_id: self.cycle_id,
             from_employee_id,
             to_employee_id,
             content,
             is_anonymous: self.is_anonymous.unwrap_or(false),
-            relationship: self.relationship.unwrap_or(FeedbackRelationship::default()),
+            relationship: self.relationship.unwrap_or_default(),
             metadata: AuditMetadata::default(),
         })
     }

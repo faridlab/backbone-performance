@@ -5,9 +5,9 @@
 //! Returns an `EntityValidator<Reward>` pre-loaded with schema-derived
 //! field rules. Extend in the `// <<< CUSTOM` zone.
 
-use backbone_core::{EntityValidator, ValidationErrors, ValidationError};
-use backbone_core::{NonNegative, OptionalNotBlank, RequiredString};
 use crate::domain::entity::Reward;
+use backbone_core::{EntityValidator, ValidationError, ValidationErrors};
+use backbone_core::{NonNegative, OptionalNotBlank, RequiredString};
 
 /// Validator type alias for Reward entities.
 pub type RewardValidator = EntityValidator<Reward>;
@@ -16,7 +16,9 @@ pub type RewardValidator = EntityValidator<Reward>;
 pub fn reward_validator() -> RewardValidator {
     EntityValidator::new()
         .rule(RequiredString::new("title", |e: &Reward| &e.title))
-        .rule(OptionalNotBlank::new("description", |e: &Reward| e.description.as_deref()))
+        .rule(OptionalNotBlank::new("description", |e: &Reward| {
+            e.description.as_deref()
+        }))
     // <<< CUSTOM RULES
     // END CUSTOM RULES
 }

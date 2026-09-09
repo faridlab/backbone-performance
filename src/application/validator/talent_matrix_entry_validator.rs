@@ -5,9 +5,9 @@
 //! Returns an `EntityValidator<TalentMatrixEntry>` pre-loaded with schema-derived
 //! field rules. Extend in the `// <<< CUSTOM` zone.
 
-use backbone_core::{EntityValidator, ValidationErrors, ValidationError};
-use backbone_core::{NonNegative, OptionalNotBlank};
 use crate::domain::entity::TalentMatrixEntry;
+use backbone_core::{EntityValidator, ValidationError, ValidationErrors};
+use backbone_core::{NonNegative, OptionalNotBlank};
 
 /// Validator type alias for TalentMatrixEntry entities.
 pub type TalentMatrixEntryValidator = EntityValidator<TalentMatrixEntry>;
@@ -15,9 +15,18 @@ pub type TalentMatrixEntryValidator = EntityValidator<TalentMatrixEntry>;
 /// Build a validator for TalentMatrixEntry with all schema-defined field rules.
 pub fn talent_matrix_entry_validator() -> TalentMatrixEntryValidator {
     EntityValidator::new()
-        .rule(NonNegative::new("performance_score", |e: &TalentMatrixEntry| e.performance_score as i64))
-        .rule(NonNegative::new("potential_score", |e: &TalentMatrixEntry| e.potential_score as i64))
-        .rule(OptionalNotBlank::new("box_label", |e: &TalentMatrixEntry| e.box_label.as_deref()))
+        .rule(NonNegative::new(
+            "performance_score",
+            |e: &TalentMatrixEntry| e.performance_score as i64,
+        ))
+        .rule(NonNegative::new(
+            "potential_score",
+            |e: &TalentMatrixEntry| e.potential_score as i64,
+        ))
+        .rule(OptionalNotBlank::new(
+            "box_label",
+            |e: &TalentMatrixEntry| e.box_label.as_deref(),
+        ))
     // <<< CUSTOM RULES
     // END CUSTOM RULES
 }

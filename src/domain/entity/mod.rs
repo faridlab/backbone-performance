@@ -4,15 +4,15 @@
 
 pub mod appraisal;
 pub mod appraisal_cycle;
-pub mod feedback;
-pub mod goal;
-pub mod reward;
-pub mod talent_matrix_entry;
 pub mod appraisal_status;
 pub mod cycle_status;
+pub mod feedback;
 pub mod feedback_relationship;
+pub mod goal;
 pub mod goal_status;
+pub mod reward;
 pub mod reward_type;
+pub mod talent_matrix_entry;
 
 // Re-exports
 pub use appraisal::Appraisal;
@@ -21,23 +21,23 @@ pub use appraisal::AppraisalId;
 pub use appraisal_cycle::AppraisalCycle;
 pub use appraisal_cycle::AppraisalCycleBuilder;
 pub use appraisal_cycle::AppraisalCycleId;
+pub use appraisal_status::AppraisalStatus;
+pub use cycle_status::CycleStatus;
 pub use feedback::Feedback;
 pub use feedback::FeedbackBuilder;
 pub use feedback::FeedbackId;
+pub use feedback_relationship::FeedbackRelationship;
 pub use goal::Goal;
 pub use goal::GoalBuilder;
 pub use goal::GoalId;
+pub use goal_status::GoalStatus;
 pub use reward::Reward;
 pub use reward::RewardBuilder;
 pub use reward::RewardId;
+pub use reward_type::RewardType;
 pub use talent_matrix_entry::TalentMatrixEntry;
 pub use talent_matrix_entry::TalentMatrixEntryBuilder;
 pub use talent_matrix_entry::TalentMatrixEntryId;
-pub use appraisal_status::AppraisalStatus;
-pub use cycle_status::CycleStatus;
-pub use feedback_relationship::FeedbackRelationship;
-pub use goal_status::GoalStatus;
-pub use reward_type::RewardType;
 
 // ==========================================================================
 // Entity Trait
@@ -66,9 +66,9 @@ pub trait Entity: Debug + Clone {
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 #[cfg(feature = "openapi")]
 use utoipa::ToSchema;
+use uuid::Uuid;
 
 /// Audit metadata stored as JSONB in the database
 ///

@@ -5,17 +5,16 @@
 //! Returns an `EntityValidator<Feedback>` pre-loaded with schema-derived
 //! field rules. Extend in the `// <<< CUSTOM` zone.
 
-use backbone_core::{EntityValidator, ValidationErrors, ValidationError};
-use backbone_core::{RequiredString};
 use crate::domain::entity::Feedback;
+use backbone_core::RequiredString;
+use backbone_core::{EntityValidator, ValidationError, ValidationErrors};
 
 /// Validator type alias for Feedback entities.
 pub type FeedbackValidator = EntityValidator<Feedback>;
 
 /// Build a validator for Feedback with all schema-defined field rules.
 pub fn feedback_validator() -> FeedbackValidator {
-    EntityValidator::new()
-        .rule(RequiredString::new("content", |e: &Feedback| &e.content))
+    EntityValidator::new().rule(RequiredString::new("content", |e: &Feedback| &e.content))
     // <<< CUSTOM RULES
     // END CUSTOM RULES
 }

@@ -5,10 +5,10 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -17,8 +17,8 @@ use utoipa::ToSchema;
 #[cfg(feature = "validation")]
 use validator::Validate;
 
-use crate::domain::entity::Goal;
 use crate::domain::entity::AuditMetadata;
+use crate::domain::entity::Goal;
 use crate::domain::entity::GoalStatus;
 
 // =============================================================================
@@ -34,10 +34,10 @@ use crate::domain::entity::GoalStatus;
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateGoalDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(alias = "company_id")]
-    pub company_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -51,7 +51,11 @@ pub struct CreateGoalDto {
     pub weight: Option<Decimal>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub progress: Option<Decimal>,
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "parent_goal_id")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "parent_goal_id"
+    )]
     pub parent_goal_id: Option<Uuid>,
     pub status: GoalStatus,
 }
@@ -69,10 +73,10 @@ pub struct CreateGoalDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateGoalDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(alias = "company_id")]
-    pub company_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -86,7 +90,11 @@ pub struct UpdateGoalDto {
     pub weight: Option<Decimal>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub progress: Option<Decimal>,
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "parent_goal_id")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "parent_goal_id"
+    )]
     pub parent_goal_id: Option<Uuid>,
     pub status: GoalStatus,
 }
@@ -104,10 +112,10 @@ pub struct UpdateGoalDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchGoalDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(skip_serializing_if = "Option::is_none", alias = "company_id")]
-    pub company_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(skip_serializing_if = "Option::is_none", alias = "employee_id")]
     pub employee_id: Option<Uuid>,
     #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -131,7 +139,14 @@ pub struct PatchGoalDto {
 impl PatchGoalDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.company_id.is_some() || self.employee_id.is_some() || self.cycle_id.is_some() || self.title.is_some() || self.description.is_some() || self.weight.is_some() || self.progress.is_some() || self.parent_goal_id.is_some() || self.status.is_some()
+        self.employee_id.is_some()
+            || self.cycle_id.is_some()
+            || self.title.is_some()
+            || self.description.is_some()
+            || self.weight.is_some()
+            || self.progress.is_some()
+            || self.parent_goal_id.is_some()
+            || self.status.is_some()
     }
 }
 
@@ -147,11 +162,15 @@ impl PatchGoalDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct GoalResponseDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    pub company_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub employee_id: Uuid,
     pub cycle_id: Option<Uuid>,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
@@ -218,9 +237,9 @@ impl GoalListResponseDto {
 #[serde(rename_all = "camelCase")]
 pub struct GoalSummaryDto {
     pub id: Uuid,
-    pub company_id: Uuid,
     pub employee_id: Uuid,
     pub cycle_id: Option<Uuid>,
+    pub title: String,
     pub created_at: Option<DateTime<Utc>>,
 }
 
@@ -232,7 +251,6 @@ impl From<Goal> for GoalResponseDto {
     fn from(entity: Goal) -> Self {
         Self {
             id: entity.id,
-            company_id: entity.company_id,
             employee_id: entity.employee_id,
             cycle_id: entity.cycle_id,
             title: entity.title,
@@ -251,9 +269,9 @@ impl From<Goal> for GoalSummaryDto {
         let created_at = backbone_core::PersistentEntity::created_at(&entity);
         Self {
             id: entity.id,
-            company_id: entity.company_id,
             employee_id: entity.employee_id,
             cycle_id: entity.cycle_id,
+            title: entity.title,
             created_at,
         }
     }
@@ -263,7 +281,6 @@ impl From<CreateGoalDto> for Goal {
     fn from(dto: CreateGoalDto) -> Self {
         Self {
             id: Uuid::new_v4(),
-            company_id: dto.company_id,
             employee_id: dto.employee_id,
             cycle_id: dto.cycle_id,
             title: dto.title,
@@ -281,7 +298,6 @@ impl From<&Goal> for GoalResponseDto {
     fn from(entity: &Goal) -> Self {
         Self {
             id: entity.id.clone(),
-            company_id: entity.company_id.clone(),
             employee_id: entity.employee_id.clone(),
             cycle_id: entity.cycle_id.clone(),
             title: entity.title.clone(),
@@ -303,7 +319,6 @@ impl backbone_core::FromCreateDto<CreateGoalDto> for Goal {
 
 impl backbone_core::ApplyUpdateDto<UpdateGoalDto> for Goal {
     fn apply_update(mut self, dto: UpdateGoalDto) -> backbone_core::ServiceResult<Self> {
-        self.company_id = dto.company_id;
         self.employee_id = dto.employee_id;
         self.cycle_id = dto.cycle_id;
         self.title = dto.title;
@@ -324,4 +339,3 @@ impl backbone_core::ApplyUpdateDto<UpdateGoalDto> for Goal {
 // Add custom DTOs specific to Goal here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
-

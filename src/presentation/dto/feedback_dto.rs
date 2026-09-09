@@ -5,9 +5,9 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use chrono::{DateTime, Utc};
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -16,8 +16,8 @@ use utoipa::ToSchema;
 #[cfg(feature = "validation")]
 use validator::Validate;
 
-use crate::domain::entity::Feedback;
 use crate::domain::entity::AuditMetadata;
+use crate::domain::entity::Feedback;
 use crate::domain::entity::FeedbackRelationship;
 
 // =============================================================================
@@ -33,15 +33,18 @@ use crate::domain::entity::FeedbackRelationship;
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateFeedbackDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(alias = "company_id")]
-    pub company_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "from_employee_id")]
     pub from_employee_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "to_employee_id")]
     pub to_employee_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
@@ -65,15 +68,18 @@ pub struct CreateFeedbackDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateFeedbackDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(alias = "company_id")]
-    pub company_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "from_employee_id")]
     pub from_employee_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "to_employee_id")]
     pub to_employee_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
@@ -97,15 +103,18 @@ pub struct UpdateFeedbackDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchFeedbackDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(skip_serializing_if = "Option::is_none", alias = "company_id")]
-    pub company_id: Option<Uuid>,
     #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(skip_serializing_if = "Option::is_none", alias = "from_employee_id")]
     pub from_employee_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(skip_serializing_if = "Option::is_none", alias = "to_employee_id")]
     pub to_employee_id: Option<Uuid>,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
@@ -121,7 +130,12 @@ pub struct PatchFeedbackDto {
 impl PatchFeedbackDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.company_id.is_some() || self.cycle_id.is_some() || self.from_employee_id.is_some() || self.to_employee_id.is_some() || self.content.is_some() || self.is_anonymous.is_some() || self.relationship.is_some()
+        self.cycle_id.is_some()
+            || self.from_employee_id.is_some()
+            || self.to_employee_id.is_some()
+            || self.content.is_some()
+            || self.is_anonymous.is_some()
+            || self.relationship.is_some()
     }
 }
 
@@ -137,14 +151,21 @@ impl PatchFeedbackDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct FeedbackResponseDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    pub company_id: Uuid,
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub from_employee_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub to_employee_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     pub content: String,
@@ -208,9 +229,9 @@ impl FeedbackListResponseDto {
 #[serde(rename_all = "camelCase")]
 pub struct FeedbackSummaryDto {
     pub id: Uuid,
-    pub company_id: Uuid,
     pub cycle_id: Option<Uuid>,
     pub from_employee_id: Uuid,
+    pub to_employee_id: Uuid,
     pub created_at: Option<DateTime<Utc>>,
 }
 
@@ -222,7 +243,6 @@ impl From<Feedback> for FeedbackResponseDto {
     fn from(entity: Feedback) -> Self {
         Self {
             id: entity.id,
-            company_id: entity.company_id,
             cycle_id: entity.cycle_id,
             from_employee_id: entity.from_employee_id,
             to_employee_id: entity.to_employee_id,
@@ -239,9 +259,9 @@ impl From<Feedback> for FeedbackSummaryDto {
         let created_at = backbone_core::PersistentEntity::created_at(&entity);
         Self {
             id: entity.id,
-            company_id: entity.company_id,
             cycle_id: entity.cycle_id,
             from_employee_id: entity.from_employee_id,
+            to_employee_id: entity.to_employee_id,
             created_at,
         }
     }
@@ -251,7 +271,6 @@ impl From<CreateFeedbackDto> for Feedback {
     fn from(dto: CreateFeedbackDto) -> Self {
         Self {
             id: Uuid::new_v4(),
-            company_id: dto.company_id,
             cycle_id: dto.cycle_id,
             from_employee_id: dto.from_employee_id,
             to_employee_id: dto.to_employee_id,
@@ -267,7 +286,6 @@ impl From<&Feedback> for FeedbackResponseDto {
     fn from(entity: &Feedback) -> Self {
         Self {
             id: entity.id.clone(),
-            company_id: entity.company_id.clone(),
             cycle_id: entity.cycle_id.clone(),
             from_employee_id: entity.from_employee_id.clone(),
             to_employee_id: entity.to_employee_id.clone(),
@@ -287,7 +305,6 @@ impl backbone_core::FromCreateDto<CreateFeedbackDto> for Feedback {
 
 impl backbone_core::ApplyUpdateDto<UpdateFeedbackDto> for Feedback {
     fn apply_update(mut self, dto: UpdateFeedbackDto) -> backbone_core::ServiceResult<Self> {
-        self.company_id = dto.company_id;
         self.cycle_id = dto.cycle_id;
         self.from_employee_id = dto.from_employee_id;
         self.to_employee_id = dto.to_employee_id;
@@ -306,4 +323,3 @@ impl backbone_core::ApplyUpdateDto<UpdateFeedbackDto> for Feedback {
 // Add custom DTOs specific to Feedback here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
-

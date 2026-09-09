@@ -5,9 +5,8 @@
 //! This trait defines the repository contract for the AppraisalCycle aggregate.
 //! Implementation is in the infrastructure layer.
 
-use async_trait::async_trait;
 use anyhow::Result;
-use uuid::Uuid;
+use async_trait::async_trait;
 
 use crate::domain::entity::{AppraisalCycle, CycleStatus};
 
@@ -44,7 +43,6 @@ pub struct AppraisalCyclePaginatedResult {
 /// Filter parameters for list queries
 #[derive(Debug, Clone, Default)]
 pub struct AppraisalCycleFilter {
-    pub company_id: Option<Uuid>,
     pub name: Option<String>,
     pub cycle_type: Option<String>,
     pub status: Option<CycleStatus>,
@@ -53,7 +51,7 @@ pub struct AppraisalCycleFilter {
 impl AppraisalCycleFilter {
     /// Check if any filter is set
     pub fn has_filters(&self) -> bool {
-        self.company_id.is_some() || self.name.is_some() || self.cycle_type.is_some() || self.status.is_some()
+        self.name.is_some() || self.cycle_type.is_some() || self.status.is_some()
     }
 }
 
@@ -63,7 +61,6 @@ impl AppraisalCycleFilter {
 /// Implementations should be in the infrastructure layer.
 #[async_trait]
 pub trait AppraisalCycleRepository: Send + Sync {
-
     // =========================================================================
     // Core CRUD Operations
     // =========================================================================
@@ -88,10 +85,17 @@ pub trait AppraisalCycleRepository: Send + Sync {
     // =========================================================================
 
     /// List appraisal_cycle with pagination
-    async fn list(&self, params: AppraisalCyclePaginationParams) -> Result<AppraisalCyclePaginatedResult>;
+    async fn list(
+        &self,
+        params: AppraisalCyclePaginationParams,
+    ) -> Result<AppraisalCyclePaginatedResult>;
 
     /// List appraisal_cycle with pagination and filters
-    async fn list_with_filters(&self, params: AppraisalCyclePaginationParams, filters: AppraisalCycleFilter) -> Result<AppraisalCyclePaginatedResult>;
+    async fn list_with_filters(
+        &self,
+        params: AppraisalCyclePaginationParams,
+        filters: AppraisalCycleFilter,
+    ) -> Result<AppraisalCyclePaginatedResult>;
 
     /// Count all appraisal_cycle entities
     async fn count(&self) -> Result<u64>;
@@ -113,7 +117,10 @@ pub trait AppraisalCycleRepository: Send + Sync {
     async fn restore(&self, id: &str) -> Result<Option<AppraisalCycle>>;
 
     /// List soft-deleted appraisal_cycle entities
-    async fn list_deleted(&self, params: AppraisalCyclePaginationParams) -> Result<AppraisalCyclePaginatedResult>;
+    async fn list_deleted(
+        &self,
+        params: AppraisalCyclePaginationParams,
+    ) -> Result<AppraisalCyclePaginatedResult>;
 
     /// Empty trash (permanently delete all soft-deleted entities)
     async fn empty_trash(&self) -> Result<u64>;

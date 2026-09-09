@@ -8,17 +8,17 @@
 //! ## Usage from other modules
 //!
 //! ```text
-//! use performance::exports::{AppraisalDto, PerformanceQueryService};
+//! use performance::exports::{AppraisalDto};
 //! ```
 
-mod types;
-mod services;
 mod events;
+mod services;
+mod types;
 
 // Re-export all public types
-pub use types::*;
-pub use services::*;
 pub use events::*;
+pub use services::*;
+pub use types::*;
 
 // ============================================================================
 // EXPORT SUMMARY
@@ -45,9 +45,6 @@ pub use events::*;
 /// - `TalentMatrixEntryDto` - Data transfer object for TalentMatrixEntry
 /// - `TalentMatrixEntrySummary` - Summary view of TalentMatrixEntry
 /// - `TalentMatrixEntryId` - Type-safe ID wrapper
-///
-/// ## Public Services
-/// - `PerformanceQueryService` - Read-only queries
 ///
 /// ## Public Events
 /// - `AppraisalCreatedEvent` - Published when Appraisal is created

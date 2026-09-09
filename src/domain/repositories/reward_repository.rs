@@ -5,8 +5,8 @@
 //! This trait defines the repository contract for the Reward aggregate.
 //! Implementation is in the infrastructure layer.
 
-use async_trait::async_trait;
 use anyhow::Result;
+use async_trait::async_trait;
 use uuid::Uuid;
 
 use crate::domain::entity::{Reward, RewardType};
@@ -44,7 +44,6 @@ pub struct RewardPaginatedResult {
 /// Filter parameters for list queries
 #[derive(Debug, Clone, Default)]
 pub struct RewardFilter {
-    pub company_id: Option<Uuid>,
     pub employee_id: Option<Uuid>,
     pub cycle_id: Option<Uuid>,
     pub reward_type: Option<RewardType>,
@@ -57,7 +56,13 @@ pub struct RewardFilter {
 impl RewardFilter {
     /// Check if any filter is set
     pub fn has_filters(&self) -> bool {
-        self.company_id.is_some() || self.employee_id.is_some() || self.cycle_id.is_some() || self.reward_type.is_some() || self.title.is_some() || self.description.is_some() || self.awarded_by.is_some() || self.payroll_component_id.is_some()
+        self.employee_id.is_some()
+            || self.cycle_id.is_some()
+            || self.reward_type.is_some()
+            || self.title.is_some()
+            || self.description.is_some()
+            || self.awarded_by.is_some()
+            || self.payroll_component_id.is_some()
     }
 }
 
@@ -67,7 +72,6 @@ impl RewardFilter {
 /// Implementations should be in the infrastructure layer.
 #[async_trait]
 pub trait RewardRepository: Send + Sync {
-
     // =========================================================================
     // Core CRUD Operations
     // =========================================================================
@@ -95,7 +99,11 @@ pub trait RewardRepository: Send + Sync {
     async fn list(&self, params: RewardPaginationParams) -> Result<RewardPaginatedResult>;
 
     /// List reward with pagination and filters
-    async fn list_with_filters(&self, params: RewardPaginationParams, filters: RewardFilter) -> Result<RewardPaginatedResult>;
+    async fn list_with_filters(
+        &self,
+        params: RewardPaginationParams,
+        filters: RewardFilter,
+    ) -> Result<RewardPaginatedResult>;
 
     /// Count all reward entities
     async fn count(&self) -> Result<u64>;

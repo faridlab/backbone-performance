@@ -23,7 +23,9 @@ pub struct AppraisalRepository(
 
 impl std::ops::Deref for AppraisalRepository {
     type Target = backbone_orm::GenericCrudRepository<Appraisal, backbone_orm::SoftDelete>;
-    fn deref(&self) -> &Self::Target { &self.0 }
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
 impl AppraisalRepository {

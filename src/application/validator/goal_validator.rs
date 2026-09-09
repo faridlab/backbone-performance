@@ -5,9 +5,9 @@
 //! Returns an `EntityValidator<Goal>` pre-loaded with schema-derived
 //! field rules. Extend in the `// <<< CUSTOM` zone.
 
-use backbone_core::{EntityValidator, ValidationErrors, ValidationError};
-use backbone_core::{NonNegative, OptionalNotBlank, RequiredString};
 use crate::domain::entity::Goal;
+use backbone_core::{EntityValidator, ValidationError, ValidationErrors};
+use backbone_core::{NonNegative, OptionalNotBlank, RequiredString};
 
 /// Validator type alias for Goal entities.
 pub type GoalValidator = EntityValidator<Goal>;
@@ -16,7 +16,9 @@ pub type GoalValidator = EntityValidator<Goal>;
 pub fn goal_validator() -> GoalValidator {
     EntityValidator::new()
         .rule(RequiredString::new("title", |e: &Goal| &e.title))
-        .rule(OptionalNotBlank::new("description", |e: &Goal| e.description.as_deref()))
+        .rule(OptionalNotBlank::new("description", |e: &Goal| {
+            e.description.as_deref()
+        }))
     // <<< CUSTOM RULES
     // END CUSTOM RULES
 }

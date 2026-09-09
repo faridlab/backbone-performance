@@ -5,10 +5,10 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -18,8 +18,8 @@ use utoipa::ToSchema;
 use validator::Validate;
 
 use crate::domain::entity::Appraisal;
-use crate::domain::entity::AuditMetadata;
 use crate::domain::entity::AppraisalStatus;
+use crate::domain::entity::AuditMetadata;
 
 // =============================================================================
 // Create DTO
@@ -34,22 +34,36 @@ use crate::domain::entity::AppraisalStatus;
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateAppraisalDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(alias = "company_id")]
-    pub company_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "cycle_id")]
     pub cycle_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "reviewer_id")]
     pub reviewer_id: Uuid,
     pub status: AppraisalStatus,
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "overall_rating")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "overall_rating"
+    )]
     pub overall_rating: Option<Decimal>,
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "submitted_at")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "submitted_at"
+    )]
     pub submitted_at: Option<DateTime<Utc>>,
 }
 
@@ -66,22 +80,36 @@ pub struct CreateAppraisalDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateAppraisalDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(alias = "company_id")]
-    pub company_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "cycle_id")]
     pub cycle_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(alias = "reviewer_id")]
     pub reviewer_id: Uuid,
     pub status: AppraisalStatus,
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "overall_rating")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "overall_rating"
+    )]
     pub overall_rating: Option<Decimal>,
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "submitted_at")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "submitted_at"
+    )]
     pub submitted_at: Option<DateTime<Utc>>,
 }
 
@@ -98,16 +126,22 @@ pub struct UpdateAppraisalDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchAppraisalDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(skip_serializing_if = "Option::is_none", alias = "company_id")]
-    pub company_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(skip_serializing_if = "Option::is_none", alias = "employee_id")]
     pub employee_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     #[serde(skip_serializing_if = "Option::is_none", alias = "reviewer_id")]
     pub reviewer_id: Option<Uuid>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -121,7 +155,12 @@ pub struct PatchAppraisalDto {
 impl PatchAppraisalDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.company_id.is_some() || self.employee_id.is_some() || self.cycle_id.is_some() || self.reviewer_id.is_some() || self.status.is_some() || self.overall_rating.is_some() || self.submitted_at.is_some()
+        self.employee_id.is_some()
+            || self.cycle_id.is_some()
+            || self.reviewer_id.is_some()
+            || self.status.is_some()
+            || self.overall_rating.is_some()
+            || self.submitted_at.is_some()
     }
 }
 
@@ -137,15 +176,25 @@ impl PatchAppraisalDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct AppraisalResponseDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    pub company_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub employee_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub cycle_id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub reviewer_id: Uuid,
     pub status: AppraisalStatus,
     pub overall_rating: Option<Decimal>,
@@ -207,9 +256,9 @@ impl AppraisalListResponseDto {
 #[serde(rename_all = "camelCase")]
 pub struct AppraisalSummaryDto {
     pub id: Uuid,
-    pub company_id: Uuid,
     pub employee_id: Uuid,
     pub cycle_id: Uuid,
+    pub reviewer_id: Uuid,
     pub created_at: Option<DateTime<Utc>>,
 }
 
@@ -221,7 +270,6 @@ impl From<Appraisal> for AppraisalResponseDto {
     fn from(entity: Appraisal) -> Self {
         Self {
             id: entity.id,
-            company_id: entity.company_id,
             employee_id: entity.employee_id,
             cycle_id: entity.cycle_id,
             reviewer_id: entity.reviewer_id,
@@ -238,9 +286,9 @@ impl From<Appraisal> for AppraisalSummaryDto {
         let created_at = backbone_core::PersistentEntity::created_at(&entity);
         Self {
             id: entity.id,
-            company_id: entity.company_id,
             employee_id: entity.employee_id,
             cycle_id: entity.cycle_id,
+            reviewer_id: entity.reviewer_id,
             created_at,
         }
     }
@@ -250,7 +298,6 @@ impl From<CreateAppraisalDto> for Appraisal {
     fn from(dto: CreateAppraisalDto) -> Self {
         Self {
             id: Uuid::new_v4(),
-            company_id: dto.company_id,
             employee_id: dto.employee_id,
             cycle_id: dto.cycle_id,
             reviewer_id: dto.reviewer_id,
@@ -266,7 +313,6 @@ impl From<&Appraisal> for AppraisalResponseDto {
     fn from(entity: &Appraisal) -> Self {
         Self {
             id: entity.id.clone(),
-            company_id: entity.company_id.clone(),
             employee_id: entity.employee_id.clone(),
             cycle_id: entity.cycle_id.clone(),
             reviewer_id: entity.reviewer_id.clone(),
@@ -286,7 +332,6 @@ impl backbone_core::FromCreateDto<CreateAppraisalDto> for Appraisal {
 
 impl backbone_core::ApplyUpdateDto<UpdateAppraisalDto> for Appraisal {
     fn apply_update(mut self, dto: UpdateAppraisalDto) -> backbone_core::ServiceResult<Self> {
-        self.company_id = dto.company_id;
         self.employee_id = dto.employee_id;
         self.cycle_id = dto.cycle_id;
         self.reviewer_id = dto.reviewer_id;
@@ -305,4 +350,3 @@ impl backbone_core::ApplyUpdateDto<UpdateAppraisalDto> for Appraisal {
 // Add custom DTOs specific to Appraisal here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
-

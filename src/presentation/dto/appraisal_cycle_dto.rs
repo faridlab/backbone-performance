@@ -5,9 +5,9 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
+use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use chrono::{DateTime, Utc, NaiveDate};
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -33,9 +33,6 @@ use crate::domain::entity::CycleStatus;
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateAppraisalCycleDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(alias = "company_id")]
-    pub company_id: Uuid,
     #[cfg_attr(feature = "validation", validate(length(max = 180)))]
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     pub name: String,
@@ -64,9 +61,6 @@ pub struct CreateAppraisalCycleDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateAppraisalCycleDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(alias = "company_id")]
-    pub company_id: Uuid,
     #[cfg_attr(feature = "validation", validate(length(max = 180)))]
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     pub name: String,
@@ -95,9 +89,6 @@ pub struct UpdateAppraisalCycleDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchAppraisalCycleDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    #[serde(skip_serializing_if = "Option::is_none", alias = "company_id")]
-    pub company_id: Option<Uuid>,
     #[cfg_attr(feature = "validation", validate(length(max = 180)))]
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -118,7 +109,11 @@ pub struct PatchAppraisalCycleDto {
 impl PatchAppraisalCycleDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.company_id.is_some() || self.name.is_some() || self.cycle_type.is_some() || self.period_start.is_some() || self.period_end.is_some() || self.status.is_some()
+        self.name.is_some()
+            || self.cycle_type.is_some()
+            || self.period_start.is_some()
+            || self.period_end.is_some()
+            || self.status.is_some()
     }
 }
 
@@ -134,10 +129,11 @@ impl PatchAppraisalCycleDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct AppraisalCycleResponseDto {
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
+    #[cfg_attr(
+        feature = "openapi",
+        schema(example = "550e8400-e29b-41d4-a716-446655440000")
+    )]
     pub id: Uuid,
-    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
-    pub company_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     pub name: String,
     pub cycle_type: Option<String>,
@@ -179,7 +175,12 @@ pub struct AppraisalCycleListResponseDto {
 
 impl AppraisalCycleListResponseDto {
     /// Create a new list response from items and pagination info
-    pub fn new(items: Vec<AppraisalCycleResponseDto>, total: u64, page: u32, per_page: u32) -> Self {
+    pub fn new(
+        items: Vec<AppraisalCycleResponseDto>,
+        total: u64,
+        page: u32,
+        per_page: u32,
+    ) -> Self {
         let total_pages = if per_page > 0 {
             ((total as f64) / (per_page as f64)).ceil() as u32
         } else {
@@ -203,9 +204,9 @@ impl AppraisalCycleListResponseDto {
 #[serde(rename_all = "camelCase")]
 pub struct AppraisalCycleSummaryDto {
     pub id: Uuid,
-    pub company_id: Uuid,
     pub name: String,
     pub cycle_type: Option<String>,
+    pub period_start: NaiveDate,
     pub created_at: Option<DateTime<Utc>>,
 }
 
@@ -217,7 +218,6 @@ impl From<AppraisalCycle> for AppraisalCycleResponseDto {
     fn from(entity: AppraisalCycle) -> Self {
         Self {
             id: entity.id,
-            company_id: entity.company_id,
             name: entity.name,
             cycle_type: entity.cycle_type,
             period_start: entity.period_start,
@@ -233,9 +233,9 @@ impl From<AppraisalCycle> for AppraisalCycleSummaryDto {
         let created_at = backbone_core::PersistentEntity::created_at(&entity);
         Self {
             id: entity.id,
-            company_id: entity.company_id,
             name: entity.name,
             cycle_type: entity.cycle_type,
+            period_start: entity.period_start,
             created_at,
         }
     }
@@ -245,7 +245,6 @@ impl From<CreateAppraisalCycleDto> for AppraisalCycle {
     fn from(dto: CreateAppraisalCycleDto) -> Self {
         Self {
             id: Uuid::new_v4(),
-            company_id: dto.company_id,
             name: dto.name,
             cycle_type: dto.cycle_type,
             period_start: dto.period_start,
@@ -260,7 +259,6 @@ impl From<&AppraisalCycle> for AppraisalCycleResponseDto {
     fn from(entity: &AppraisalCycle) -> Self {
         Self {
             id: entity.id.clone(),
-            company_id: entity.company_id.clone(),
             name: entity.name.clone(),
             cycle_type: entity.cycle_type.clone(),
             period_start: entity.period_start.clone(),
@@ -279,7 +277,6 @@ impl backbone_core::FromCreateDto<CreateAppraisalCycleDto> for AppraisalCycle {
 
 impl backbone_core::ApplyUpdateDto<UpdateAppraisalCycleDto> for AppraisalCycle {
     fn apply_update(mut self, dto: UpdateAppraisalCycleDto) -> backbone_core::ServiceResult<Self> {
-        self.company_id = dto.company_id;
         self.name = dto.name;
         self.cycle_type = dto.cycle_type;
         self.period_start = dto.period_start;
@@ -297,4 +294,3 @@ impl backbone_core::ApplyUpdateDto<UpdateAppraisalCycleDto> for AppraisalCycle {
 // Add custom DTOs specific to AppraisalCycle here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
-

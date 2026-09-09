@@ -1,11 +1,11 @@
 use chrono::{DateTime, Utc};
+use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
-use rust_decimal::Decimal;
 
-use super::GoalStatus;
 use super::AuditMetadata;
+use super::GoalStatus;
 
 /// Strongly-typed ID for Goal
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -13,9 +13,15 @@ use super::AuditMetadata;
 pub struct GoalId(pub Uuid);
 
 impl GoalId {
-    pub fn new(id: Uuid) -> Self { Self(id) }
-    pub fn generate() -> Self { Self(Uuid::new_v4()) }
-    pub fn into_inner(self) -> Uuid { self.0 }
+    pub fn new(id: Uuid) -> Self {
+        Self(id)
+    }
+    pub fn generate() -> Self {
+        Self(Uuid::new_v4())
+    }
+    pub fn into_inner(self) -> Uuid {
+        self.0
+    }
 }
 
 impl std::fmt::Display for GoalId {
@@ -32,26 +38,33 @@ impl std::str::FromStr for GoalId {
 }
 
 impl From<Uuid> for GoalId {
-    fn from(id: Uuid) -> Self { Self(id) }
+    fn from(id: Uuid) -> Self {
+        Self(id)
+    }
 }
 
 impl From<GoalId> for Uuid {
-    fn from(id: GoalId) -> Self { id.0 }
+    fn from(id: GoalId) -> Self {
+        id.0
+    }
 }
 
 impl AsRef<Uuid> for GoalId {
-    fn as_ref(&self) -> &Uuid { &self.0 }
+    fn as_ref(&self) -> &Uuid {
+        &self.0
+    }
 }
 
 impl std::ops::Deref for GoalId {
     type Target = Uuid;
-    fn deref(&self) -> &Self::Target { &self.0 }
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct Goal {
     pub id: Uuid,
-    pub company_id: Uuid,
     pub employee_id: Uuid,
     pub cycle_id: Option<Uuid>,
     pub title: String,
@@ -68,14 +81,13 @@ pub struct Goal {
 impl Goal {
     /// Create a builder for Goal
     pub fn builder() -> GoalBuilder {
-        GoalBuilder::default()
+        <GoalBuilder as Default>::default()
     }
 
     /// Create a new Goal with required fields
-    pub fn new(company_id: Uuid, employee_id: Uuid, title: String, status: GoalStatus) -> Self {
+    pub fn new(employee_id: Uuid, title: String, status: GoalStatus) -> Self {
         Self {
             id: Uuid::new_v4(),
-            company_id,
             employee_id,
             cycle_id: None,
             title,
@@ -143,7 +155,6 @@ impl Goal {
         &self.status
     }
 
-
     // ==========================================================
     // Fluent Setters (with_* for optional fields)
     // ==========================================================
@@ -186,32 +197,45 @@ impl Goal {
     pub fn apply_patch(&mut self, fields: std::collections::HashMap<String, serde_json::Value>) {
         for (key, value) in fields {
             match key.as_str() {
-                "company_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.company_id = v; }
-                }
                 "employee_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.employee_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.employee_id = v;
+                    }
                 }
                 "cycle_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.cycle_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.cycle_id = v;
+                    }
                 }
                 "title" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.title = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.title = v;
+                    }
                 }
                 "description" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.description = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.description = v;
+                    }
                 }
                 "weight" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.weight = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.weight = v;
+                    }
                 }
                 "progress" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.progress = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.progress = v;
+                    }
                 }
                 "parent_goal_id" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.parent_goal_id = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.parent_goal_id = v;
+                    }
                 }
                 "status" => {
-                    if let Ok(v) = serde_json::from_value(value) { self.status = v; }
+                    if let Ok(v) = serde_json::from_value(value) {
+                        self.status = v;
+                    }
                 }
                 _ => {} // ignore unknown fields
             }
@@ -267,7 +291,6 @@ impl backbone_orm::EntityRepoMeta for Goal {
     fn column_types() -> std::collections::HashMap<String, String> {
         let mut m = std::collections::HashMap::new();
         m.insert("id".to_string(), "uuid".to_string());
-        m.insert("company_id".to_string(), "uuid".to_string());
         m.insert("employee_id".to_string(), "uuid".to_string());
         m.insert("cycle_id".to_string(), "uuid".to_string());
         m.insert("parent_goal_id".to_string(), "uuid".to_string());
@@ -277,9 +300,6 @@ impl backbone_orm::EntityRepoMeta for Goal {
     fn search_fields() -> &'static [&'static str] {
         &["title"]
     }
-    fn company_field() -> Option<&'static str> {
-        Some("company_id")
-    }
 }
 
 /// Builder for Goal entity
@@ -288,7 +308,6 @@ impl backbone_orm::EntityRepoMeta for Goal {
 /// System fields (id, metadata, timestamps) are auto-initialized.
 #[derive(Debug, Clone, Default)]
 pub struct GoalBuilder {
-    company_id: Option<Uuid>,
     employee_id: Option<Uuid>,
     cycle_id: Option<Uuid>,
     title: Option<String>,
@@ -300,12 +319,6 @@ pub struct GoalBuilder {
 }
 
 impl GoalBuilder {
-    /// Set the company_id field (required)
-    pub fn company_id(mut self, value: Uuid) -> Self {
-        self.company_id = Some(value);
-        self
-    }
-
     /// Set the employee_id field (required)
     pub fn employee_id(mut self, value: Uuid) -> Self {
         self.employee_id = Some(value);
@@ -358,13 +371,13 @@ impl GoalBuilder {
     ///
     /// Returns Err if any required field without a default is missing.
     pub fn build(self) -> Result<Goal, String> {
-        let company_id = self.company_id.ok_or_else(|| "company_id is required".to_string())?;
-        let employee_id = self.employee_id.ok_or_else(|| "employee_id is required".to_string())?;
+        let employee_id = self
+            .employee_id
+            .ok_or_else(|| "employee_id is required".to_string())?;
         let title = self.title.ok_or_else(|| "title is required".to_string())?;
 
         Ok(Goal {
             id: Uuid::new_v4(),
-            company_id,
             employee_id,
             cycle_id: self.cycle_id,
             title,
@@ -372,7 +385,7 @@ impl GoalBuilder {
             weight: self.weight,
             progress: self.progress,
             parent_goal_id: self.parent_goal_id,
-            status: self.status.unwrap_or(GoalStatus::default()),
+            status: self.status.unwrap_or_default(),
             metadata: AuditMetadata::default(),
         })
     }
