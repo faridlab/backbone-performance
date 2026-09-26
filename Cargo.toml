@@ -1,6 +1,6 @@
 [package]
 name = "backbone-performance"
-version = "0.2.12"
+version = "0.2.13"
 edition = "2021"
 description = "Minimal Backbone Framework module skeleton"
 

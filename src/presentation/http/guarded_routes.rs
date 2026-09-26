@@ -283,14 +283,23 @@ fn create_performance_verb_routes(svc: Arc<PerformanceWriteService>) -> Router {
 pub fn create_guarded_performance_routes(m: &PerformanceModule) -> Router {
     use crate::presentation::http::create_appraisal_cycle_routes;
 
+    use crate::presentation::http::{
+        create_appraisal_read_routes, create_feedback_read_routes, create_goal_read_routes,
+        create_reward_read_routes, create_talent_matrix_entry_read_routes,
+    };
+
     Router::new()
-        // Safe base: GET-only for all seven entities.
-        .merge(m.readonly_routes())
-        // Master data keeps generic writes (cycles, goals, feedback requests,
-        // rewards, talent matrix entries — no cross-entity invariants beyond
-        // the verb-checked ones; appraisals do NOT: their lifecycle is the
-        // predicate's to guard).
+        // Reads for every entity; cycles mount their FULL generic surface
+        // (master data — the create/validate shape carries no cross-entity
+        // invariant beyond the verb-checked ones). Appraisals stay READ-ONLY:
+        // the finalised predicate's fence is by construction (no generic
+        // write can patch or soft-delete a rating).
         .merge(create_appraisal_cycle_routes(m.appraisal_cycle_service.clone()))
+        .merge(create_appraisal_read_routes(m.appraisal_service.clone()))
+        .merge(create_goal_read_routes(m.goal_service.clone()))
+        .merge(create_feedback_read_routes(m.feedback_service.clone()))
+        .merge(create_reward_read_routes(m.reward_service.clone()))
+        .merge(create_talent_matrix_entry_read_routes(m.talent_matrix_entry_service.clone()))
         // The state machine.
         .merge(create_performance_verb_routes(m.performance_write_service.clone()))
 }
