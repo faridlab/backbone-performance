@@ -66,6 +66,10 @@ pub struct PerformanceModule {
     pub(crate) reward_service: Arc<RewardService>,
     pub(crate) talent_matrix_entry_service: Arc<TalentMatrixEntryService>,
     // <<< CUSTOM FIELDS
+    /// The validated write engine: cycles, goals, appraisals. Generic CRUD
+    /// on an appraisal row bypasses the finalised predicate — use this for
+    /// every state change.
+    pub performance_write_service: Arc<application::service::PerformanceWriteService>,
     // END CUSTOM
 }
 
@@ -200,6 +204,9 @@ impl PerformanceModuleBuilder {
         ));
 
         // <<< CUSTOM
+        // The validated write engine, self-constructed from the pool.
+        let performance_write_service =
+            Arc::new(application::service::PerformanceWriteService::new(db_pool.clone()));
         // END CUSTOM
 
         Ok(PerformanceModule {
@@ -210,6 +217,7 @@ impl PerformanceModuleBuilder {
             reward_service,
             talent_matrix_entry_service,
             // <<< CUSTOM
+            performance_write_service,
             // END CUSTOM
         })
     }

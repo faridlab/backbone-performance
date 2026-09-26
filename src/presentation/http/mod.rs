@@ -12,6 +12,8 @@ pub mod goal_handler;
 pub mod reward_handler;
 pub mod talent_matrix_entry_handler;
 
+pub mod guarded_routes;
+
 // <<< CUSTOM
 // END CUSTOM
 

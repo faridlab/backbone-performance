@@ -21,6 +21,9 @@ CREATE TABLE IF NOT EXISTS performance.appraisals (
     status appraisal_status NOT NULL DEFAULT 'draft',
     overall_rating NUMERIC(3, 1) CHECK (overall_rating >= 0),
     submitted_at TIMESTAMPTZ,
+    self_review JSONB,
+    manager_review JSONB,
+    rated_at TIMESTAMPTZ,
     metadata JSONB NOT NULL DEFAULT '{"created_at":null,"updated_at":null,"deleted_at":null,"created_by":null,"updated_by":null,"deleted_by":null}'::jsonb,
     PRIMARY KEY (id)
 );

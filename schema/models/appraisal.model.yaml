@@ -43,6 +43,15 @@ models:
       submitted_at:
         type: datetime?
         description: "When the employee self-review / submission was finalized"
+      self_review:
+        type: json?
+        description: "The employee's structured self-review (strengths, achievements, goals) — set at the self step"
+      manager_review:
+        type: json?
+        description: "The reviewer's structured review — set at the manager step"
+      rated_at:
+        type: datetime?
+        description: "When the calibration rating was stamped"
 
       metadata:
         type: Metadata

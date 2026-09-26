@@ -15,6 +15,10 @@ pub mod reward_service;
 pub mod talent_matrix_entry_service;
 
 // <<< CUSTOM
+// The validated write path: cycles, goals, appraisals with the ONE
+// finalised predicate.
+pub mod performance_write_service;
+pub mod performance_events;
 // END CUSTOM
 
 pub use appraisal_cycle_service::AppraisalCycleService;
@@ -24,4 +28,8 @@ pub use goal_service::GoalService;
 pub use reward_service::RewardService;
 pub use talent_matrix_entry_service::TalentMatrixEntryService;
 // <<< CUSTOM
+pub use performance_write_service::{
+    NewAppraisal, NewCycle, NewGoal, PerformanceError, PerformanceWriteService,
+};
+pub use performance_events::{LoggingSink as PerformanceLoggingSink, PerformanceEvent, PerformanceEventSink};
 // END CUSTOM
