@@ -7,9 +7,9 @@
 
 use backbone_core::GenericCrudService;
 
+use crate::presentation::dto::{CreateRewardDto, UpdateRewardDto};
 use crate::domain::entity::Reward;
 use crate::infrastructure::persistence::RewardRepository;
-use crate::presentation::dto::{CreateRewardDto, UpdateRewardDto};
 
 /// Application service for Reward entities.
 ///
@@ -25,8 +25,12 @@ use crate::presentation::dto::{CreateRewardDto, UpdateRewardDto};
 ///     // add domain-specific dependencies here
 /// }
 /// ```
-pub type RewardService =
-    GenericCrudService<Reward, CreateRewardDto, UpdateRewardDto, RewardRepository>;
+pub type RewardService = GenericCrudService<
+    Reward,
+    CreateRewardDto,
+    UpdateRewardDto,
+    RewardRepository,
+>;
 
 // <<< CUSTOM
 // END CUSTOM

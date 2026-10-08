@@ -2254,6 +2254,16 @@ components:
           nullable: true
           type: string
           format: date-time
+        self_review:
+          nullable: true
+          type: object
+        manager_review:
+          nullable: true
+          type: object
+        rated_at:
+          nullable: true
+          type: string
+          format: date-time
         metadata:
           type: object
 
@@ -2297,6 +2307,16 @@ components:
           nullable: true
           type: string
           format: date-time
+        self_review:
+          nullable: true
+          type: object
+        manager_review:
+          nullable: true
+          type: object
+        rated_at:
+          nullable: true
+          type: string
+          format: date-time
         metadata:
           type: object
 
@@ -2327,6 +2347,16 @@ components:
           nullable: true
           type: string
           format: date-time
+        self_review:
+          nullable: true
+          type: object
+        manager_review:
+          nullable: true
+          type: object
+        rated_at:
+          nullable: true
+          type: string
+          format: date-time
         metadata:
           type: object
 
@@ -2348,6 +2378,16 @@ components:
           nullable: true
           type: string
         submitted_at:
+          nullable: true
+          type: string
+          format: date-time
+        self_review:
+          nullable: true
+          type: object
+        manager_review:
+          nullable: true
+          type: object
+        rated_at:
           nullable: true
           type: string
           format: date-time

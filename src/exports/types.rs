@@ -5,11 +5,11 @@
 //! These DTOs are the ONLY types other modules should use.
 //! They are decoupled from internal domain entities.
 
-use crate::domain::entity::*;
-use chrono::{DateTime, NaiveDate, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use chrono::{DateTime, Utc, NaiveDate};
+use rust_decimal::Decimal;
+use crate::domain::entity::*;
 
 // ============================================================================
 // APPRAISAL TYPES
@@ -55,6 +55,9 @@ pub struct AppraisalDto {
     pub status: AppraisalStatus,
     pub overall_rating: Option<Decimal>,
     pub submitted_at: Option<DateTime<Utc>>,
+    pub self_review: Option<serde_json::Value>,
+    pub manager_review: Option<serde_json::Value>,
+    pub rated_at: Option<DateTime<Utc>>,
     pub metadata: serde_json::Value,
 }
 

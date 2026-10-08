@@ -5,8 +5,8 @@
 //! This trait defines the repository contract for the TalentMatrixEntry aggregate.
 //! Implementation is in the infrastructure layer.
 
-use anyhow::Result;
 use async_trait::async_trait;
+use anyhow::Result;
 use uuid::Uuid;
 
 use crate::domain::entity::TalentMatrixEntry;
@@ -62,6 +62,7 @@ impl TalentMatrixEntryFilter {
 /// Implementations should be in the infrastructure layer.
 #[async_trait]
 pub trait TalentMatrixEntryRepository: Send + Sync {
+
     // =========================================================================
     // Core CRUD Operations
     // =========================================================================
@@ -76,11 +77,7 @@ pub trait TalentMatrixEntryRepository: Send + Sync {
     async fn find_all(&self) -> Result<Vec<TalentMatrixEntry>>;
 
     /// Update talent_matrix_entry by ID
-    async fn update(
-        &self,
-        id: &str,
-        entity: &TalentMatrixEntry,
-    ) -> Result<Option<TalentMatrixEntry>>;
+    async fn update(&self, id: &str, entity: &TalentMatrixEntry) -> Result<Option<TalentMatrixEntry>>;
 
     /// Delete talent_matrix_entry by ID
     async fn delete(&self, id: &str) -> Result<bool>;
@@ -90,17 +87,10 @@ pub trait TalentMatrixEntryRepository: Send + Sync {
     // =========================================================================
 
     /// List talent_matrix_entry with pagination
-    async fn list(
-        &self,
-        params: TalentMatrixEntryPaginationParams,
-    ) -> Result<TalentMatrixEntryPaginatedResult>;
+    async fn list(&self, params: TalentMatrixEntryPaginationParams) -> Result<TalentMatrixEntryPaginatedResult>;
 
     /// List talent_matrix_entry with pagination and filters
-    async fn list_with_filters(
-        &self,
-        params: TalentMatrixEntryPaginationParams,
-        filters: TalentMatrixEntryFilter,
-    ) -> Result<TalentMatrixEntryPaginatedResult>;
+    async fn list_with_filters(&self, params: TalentMatrixEntryPaginationParams, filters: TalentMatrixEntryFilter) -> Result<TalentMatrixEntryPaginatedResult>;
 
     /// Count all talent_matrix_entry entities
     async fn count(&self) -> Result<u64>;
@@ -122,10 +112,7 @@ pub trait TalentMatrixEntryRepository: Send + Sync {
     async fn restore(&self, id: &str) -> Result<Option<TalentMatrixEntry>>;
 
     /// List soft-deleted talent_matrix_entry entities
-    async fn list_deleted(
-        &self,
-        params: TalentMatrixEntryPaginationParams,
-    ) -> Result<TalentMatrixEntryPaginatedResult>;
+    async fn list_deleted(&self, params: TalentMatrixEntryPaginationParams) -> Result<TalentMatrixEntryPaginatedResult>;
 
     /// Empty trash (permanently delete all soft-deleted entities)
     async fn empty_trash(&self) -> Result<u64>;

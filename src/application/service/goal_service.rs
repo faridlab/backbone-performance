@@ -7,9 +7,9 @@
 
 use backbone_core::GenericCrudService;
 
+use crate::presentation::dto::{CreateGoalDto, UpdateGoalDto};
 use crate::domain::entity::Goal;
 use crate::infrastructure::persistence::GoalRepository;
-use crate::presentation::dto::{CreateGoalDto, UpdateGoalDto};
 
 /// Application service for Goal entities.
 ///
@@ -25,7 +25,12 @@ use crate::presentation::dto::{CreateGoalDto, UpdateGoalDto};
 ///     // add domain-specific dependencies here
 /// }
 /// ```
-pub type GoalService = GenericCrudService<Goal, CreateGoalDto, UpdateGoalDto, GoalRepository>;
+pub type GoalService = GenericCrudService<
+    Goal,
+    CreateGoalDto,
+    UpdateGoalDto,
+    GoalRepository,
+>;
 
 // <<< CUSTOM
 // END CUSTOM

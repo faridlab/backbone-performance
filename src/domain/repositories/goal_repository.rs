@@ -5,8 +5,8 @@
 //! This trait defines the repository contract for the Goal aggregate.
 //! Implementation is in the infrastructure layer.
 
-use anyhow::Result;
 use async_trait::async_trait;
+use anyhow::Result;
 use uuid::Uuid;
 
 use crate::domain::entity::{Goal, GoalStatus};
@@ -55,12 +55,7 @@ pub struct GoalFilter {
 impl GoalFilter {
     /// Check if any filter is set
     pub fn has_filters(&self) -> bool {
-        self.employee_id.is_some()
-            || self.cycle_id.is_some()
-            || self.title.is_some()
-            || self.description.is_some()
-            || self.parent_goal_id.is_some()
-            || self.status.is_some()
+        self.employee_id.is_some() || self.cycle_id.is_some() || self.title.is_some() || self.description.is_some() || self.parent_goal_id.is_some() || self.status.is_some()
     }
 }
 
@@ -70,6 +65,7 @@ impl GoalFilter {
 /// Implementations should be in the infrastructure layer.
 #[async_trait]
 pub trait GoalRepository: Send + Sync {
+
     // =========================================================================
     // Core CRUD Operations
     // =========================================================================
@@ -97,11 +93,7 @@ pub trait GoalRepository: Send + Sync {
     async fn list(&self, params: GoalPaginationParams) -> Result<GoalPaginatedResult>;
 
     /// List goal with pagination and filters
-    async fn list_with_filters(
-        &self,
-        params: GoalPaginationParams,
-        filters: GoalFilter,
-    ) -> Result<GoalPaginatedResult>;
+    async fn list_with_filters(&self, params: GoalPaginationParams, filters: GoalFilter) -> Result<GoalPaginatedResult>;
 
     /// Count all goal entities
     async fn count(&self) -> Result<u64>;

@@ -5,9 +5,9 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
-use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use chrono::{DateTime, Utc, NaiveDate};
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -109,11 +109,7 @@ pub struct PatchAppraisalCycleDto {
 impl PatchAppraisalCycleDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.name.is_some()
-            || self.cycle_type.is_some()
-            || self.period_start.is_some()
-            || self.period_end.is_some()
-            || self.status.is_some()
+        self.name.is_some() || self.cycle_type.is_some() || self.period_start.is_some() || self.period_end.is_some() || self.status.is_some()
     }
 }
 
@@ -129,10 +125,7 @@ impl PatchAppraisalCycleDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct AppraisalCycleResponseDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     pub name: String,
@@ -175,12 +168,7 @@ pub struct AppraisalCycleListResponseDto {
 
 impl AppraisalCycleListResponseDto {
     /// Create a new list response from items and pagination info
-    pub fn new(
-        items: Vec<AppraisalCycleResponseDto>,
-        total: u64,
-        page: u32,
-        per_page: u32,
-    ) -> Self {
+    pub fn new(items: Vec<AppraisalCycleResponseDto>, total: u64, page: u32, per_page: u32) -> Self {
         let total_pages = if per_page > 0 {
             ((total as f64) / (per_page as f64)).ceil() as u32
         } else {

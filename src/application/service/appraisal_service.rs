@@ -7,9 +7,9 @@
 
 use backbone_core::GenericCrudService;
 
+use crate::presentation::dto::{CreateAppraisalDto, UpdateAppraisalDto};
 use crate::domain::entity::Appraisal;
 use crate::infrastructure::persistence::AppraisalRepository;
-use crate::presentation::dto::{CreateAppraisalDto, UpdateAppraisalDto};
 
 /// Application service for Appraisal entities.
 ///
@@ -25,8 +25,12 @@ use crate::presentation::dto::{CreateAppraisalDto, UpdateAppraisalDto};
 ///     // add domain-specific dependencies here
 /// }
 /// ```
-pub type AppraisalService =
-    GenericCrudService<Appraisal, CreateAppraisalDto, UpdateAppraisalDto, AppraisalRepository>;
+pub type AppraisalService = GenericCrudService<
+    Appraisal,
+    CreateAppraisalDto,
+    UpdateAppraisalDto,
+    AppraisalRepository,
+>;
 
 // <<< CUSTOM
 // END CUSTOM

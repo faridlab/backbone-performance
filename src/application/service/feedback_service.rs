@@ -7,9 +7,9 @@
 
 use backbone_core::GenericCrudService;
 
+use crate::presentation::dto::{CreateFeedbackDto, UpdateFeedbackDto};
 use crate::domain::entity::Feedback;
 use crate::infrastructure::persistence::FeedbackRepository;
-use crate::presentation::dto::{CreateFeedbackDto, UpdateFeedbackDto};
 
 /// Application service for Feedback entities.
 ///
@@ -25,8 +25,12 @@ use crate::presentation::dto::{CreateFeedbackDto, UpdateFeedbackDto};
 ///     // add domain-specific dependencies here
 /// }
 /// ```
-pub type FeedbackService =
-    GenericCrudService<Feedback, CreateFeedbackDto, UpdateFeedbackDto, FeedbackRepository>;
+pub type FeedbackService = GenericCrudService<
+    Feedback,
+    CreateFeedbackDto,
+    UpdateFeedbackDto,
+    FeedbackRepository,
+>;
 
 // <<< CUSTOM
 // END CUSTOM

@@ -1,11 +1,11 @@
 use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
+use rust_decimal::Decimal;
 
-use super::AuditMetadata;
 use super::GoalStatus;
+use super::AuditMetadata;
 
 /// Strongly-typed ID for Goal
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -13,15 +13,9 @@ use super::GoalStatus;
 pub struct GoalId(pub Uuid);
 
 impl GoalId {
-    pub fn new(id: Uuid) -> Self {
-        Self(id)
-    }
-    pub fn generate() -> Self {
-        Self(Uuid::new_v4())
-    }
-    pub fn into_inner(self) -> Uuid {
-        self.0
-    }
+    pub fn new(id: Uuid) -> Self { Self(id) }
+    pub fn generate() -> Self { Self(Uuid::new_v4()) }
+    pub fn into_inner(self) -> Uuid { self.0 }
 }
 
 impl std::fmt::Display for GoalId {
@@ -38,28 +32,20 @@ impl std::str::FromStr for GoalId {
 }
 
 impl From<Uuid> for GoalId {
-    fn from(id: Uuid) -> Self {
-        Self(id)
-    }
+    fn from(id: Uuid) -> Self { Self(id) }
 }
 
 impl From<GoalId> for Uuid {
-    fn from(id: GoalId) -> Self {
-        id.0
-    }
+    fn from(id: GoalId) -> Self { id.0 }
 }
 
 impl AsRef<Uuid> for GoalId {
-    fn as_ref(&self) -> &Uuid {
-        &self.0
-    }
+    fn as_ref(&self) -> &Uuid { &self.0 }
 }
 
 impl std::ops::Deref for GoalId {
     type Target = Uuid;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+    fn deref(&self) -> &Self::Target { &self.0 }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
@@ -155,6 +141,7 @@ impl Goal {
         &self.status
     }
 
+
     // ==========================================================
     // Fluent Setters (with_* for optional fields)
     // ==========================================================
@@ -198,44 +185,28 @@ impl Goal {
         for (key, value) in fields {
             match key.as_str() {
                 "employee_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.employee_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.employee_id = v; }
                 }
                 "cycle_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.cycle_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.cycle_id = v; }
                 }
                 "title" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.title = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.title = v; }
                 }
                 "description" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.description = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.description = v; }
                 }
                 "weight" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.weight = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.weight = v; }
                 }
                 "progress" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.progress = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.progress = v; }
                 }
                 "parent_goal_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.parent_goal_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.parent_goal_id = v; }
                 }
                 "status" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.status = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.status = v; }
                 }
                 _ => {} // ignore unknown fields
             }
@@ -371,9 +342,7 @@ impl GoalBuilder {
     ///
     /// Returns Err if any required field without a default is missing.
     pub fn build(self) -> Result<Goal, String> {
-        let employee_id = self
-            .employee_id
-            .ok_or_else(|| "employee_id is required".to_string())?;
+        let employee_id = self.employee_id.ok_or_else(|| "employee_id is required".to_string())?;
         let title = self.title.ok_or_else(|| "title is required".to_string())?;
 
         Ok(Goal {

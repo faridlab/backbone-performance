@@ -41,10 +41,9 @@ impl Seeder for SeedTalentMatrixEntrySeeder {
 
     async fn should_run(&self, pool: &PgPool) -> Result<bool> {
         // Check if performance.talent_matrix_entries table has any data
-        let count: (i64,) =
-            sqlx::query_as("SELECT COUNT(*) FROM performance.talent_matrix_entries")
-                .fetch_one(pool)
-                .await?;
+        let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM performance.talent_matrix_entries")
+            .fetch_one(pool)
+            .await?;
         Ok(count.0 == 0)
     }
 

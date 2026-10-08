@@ -1,8 +1,8 @@
 use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
+use rust_decimal::Decimal;
 
 use super::AppraisalStatus;
 use super::AuditMetadata;
@@ -13,15 +13,9 @@ use super::AuditMetadata;
 pub struct AppraisalId(pub Uuid);
 
 impl AppraisalId {
-    pub fn new(id: Uuid) -> Self {
-        Self(id)
-    }
-    pub fn generate() -> Self {
-        Self(Uuid::new_v4())
-    }
-    pub fn into_inner(self) -> Uuid {
-        self.0
-    }
+    pub fn new(id: Uuid) -> Self { Self(id) }
+    pub fn generate() -> Self { Self(Uuid::new_v4()) }
+    pub fn into_inner(self) -> Uuid { self.0 }
 }
 
 impl std::fmt::Display for AppraisalId {
@@ -38,28 +32,20 @@ impl std::str::FromStr for AppraisalId {
 }
 
 impl From<Uuid> for AppraisalId {
-    fn from(id: Uuid) -> Self {
-        Self(id)
-    }
+    fn from(id: Uuid) -> Self { Self(id) }
 }
 
 impl From<AppraisalId> for Uuid {
-    fn from(id: AppraisalId) -> Self {
-        id.0
-    }
+    fn from(id: AppraisalId) -> Self { id.0 }
 }
 
 impl AsRef<Uuid> for AppraisalId {
-    fn as_ref(&self) -> &Uuid {
-        &self.0
-    }
+    fn as_ref(&self) -> &Uuid { &self.0 }
 }
 
 impl std::ops::Deref for AppraisalId {
     type Target = Uuid;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+    fn deref(&self) -> &Self::Target { &self.0 }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
@@ -71,6 +57,9 @@ pub struct Appraisal {
     pub status: AppraisalStatus,
     pub overall_rating: Option<Decimal>,
     pub submitted_at: Option<DateTime<Utc>>,
+    pub self_review: Option<serde_json::Value>,
+    pub manager_review: Option<serde_json::Value>,
+    pub rated_at: Option<DateTime<Utc>>,
     #[serde(default)]
     #[sqlx(json)]
     pub metadata: AuditMetadata,
@@ -83,12 +72,7 @@ impl Appraisal {
     }
 
     /// Create a new Appraisal with required fields
-    pub fn new(
-        employee_id: Uuid,
-        cycle_id: Uuid,
-        reviewer_id: Uuid,
-        status: AppraisalStatus,
-    ) -> Self {
+    pub fn new(employee_id: Uuid, cycle_id: Uuid, reviewer_id: Uuid, status: AppraisalStatus) -> Self {
         Self {
             id: Uuid::new_v4(),
             employee_id,
@@ -97,6 +81,9 @@ impl Appraisal {
             status,
             overall_rating: None,
             submitted_at: None,
+            self_review: None,
+            manager_review: None,
+            rated_at: None,
             metadata: AuditMetadata::default(),
         }
     }
@@ -156,6 +143,7 @@ impl Appraisal {
         &self.status
     }
 
+
     // ==========================================================
     // Fluent Setters (with_* for optional fields)
     // ==========================================================
@@ -172,6 +160,24 @@ impl Appraisal {
         self
     }
 
+    /// Set the self_review field (chainable)
+    pub fn with_self_review(mut self, value: serde_json::Value) -> Self {
+        self.self_review = Some(value);
+        self
+    }
+
+    /// Set the manager_review field (chainable)
+    pub fn with_manager_review(mut self, value: serde_json::Value) -> Self {
+        self.manager_review = Some(value);
+        self
+    }
+
+    /// Set the rated_at field (chainable)
+    pub fn with_rated_at(mut self, value: DateTime<Utc>) -> Self {
+        self.rated_at = Some(value);
+        self
+    }
+
     // ==========================================================
     // Partial Update
     // ==========================================================
@@ -181,34 +187,31 @@ impl Appraisal {
         for (key, value) in fields {
             match key.as_str() {
                 "employee_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.employee_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.employee_id = v; }
                 }
                 "cycle_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.cycle_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.cycle_id = v; }
                 }
                 "reviewer_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.reviewer_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.reviewer_id = v; }
                 }
                 "status" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.status = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.status = v; }
                 }
                 "overall_rating" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.overall_rating = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.overall_rating = v; }
                 }
                 "submitted_at" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.submitted_at = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.submitted_at = v; }
+                }
+                "self_review" => {
+                    if let Ok(v) = serde_json::from_value(value) { self.self_review = v; }
+                }
+                "manager_review" => {
+                    if let Ok(v) = serde_json::from_value(value) { self.manager_review = v; }
+                }
+                "rated_at" => {
+                    if let Ok(v) = serde_json::from_value(value) { self.rated_at = v; }
                 }
                 _ => {} // ignore unknown fields
             }
@@ -268,6 +271,8 @@ impl backbone_orm::EntityRepoMeta for Appraisal {
         m.insert("cycle_id".to_string(), "uuid".to_string());
         m.insert("reviewer_id".to_string(), "uuid".to_string());
         m.insert("status".to_string(), "appraisal_status".to_string());
+        m.insert("submitted_at".to_string(), "timestamptz".to_string());
+        m.insert("rated_at".to_string(), "timestamptz".to_string());
         m
     }
     fn search_fields() -> &'static [&'static str] {
@@ -287,6 +292,9 @@ pub struct AppraisalBuilder {
     status: Option<AppraisalStatus>,
     overall_rating: Option<Decimal>,
     submitted_at: Option<DateTime<Utc>>,
+    self_review: Option<serde_json::Value>,
+    manager_review: Option<serde_json::Value>,
+    rated_at: Option<DateTime<Utc>>,
 }
 
 impl AppraisalBuilder {
@@ -326,19 +334,31 @@ impl AppraisalBuilder {
         self
     }
 
+    /// Set the self_review field (optional)
+    pub fn self_review(mut self, value: serde_json::Value) -> Self {
+        self.self_review = Some(value);
+        self
+    }
+
+    /// Set the manager_review field (optional)
+    pub fn manager_review(mut self, value: serde_json::Value) -> Self {
+        self.manager_review = Some(value);
+        self
+    }
+
+    /// Set the rated_at field (optional)
+    pub fn rated_at(mut self, value: DateTime<Utc>) -> Self {
+        self.rated_at = Some(value);
+        self
+    }
+
     /// Build the Appraisal entity
     ///
     /// Returns Err if any required field without a default is missing.
     pub fn build(self) -> Result<Appraisal, String> {
-        let employee_id = self
-            .employee_id
-            .ok_or_else(|| "employee_id is required".to_string())?;
-        let cycle_id = self
-            .cycle_id
-            .ok_or_else(|| "cycle_id is required".to_string())?;
-        let reviewer_id = self
-            .reviewer_id
-            .ok_or_else(|| "reviewer_id is required".to_string())?;
+        let employee_id = self.employee_id.ok_or_else(|| "employee_id is required".to_string())?;
+        let cycle_id = self.cycle_id.ok_or_else(|| "cycle_id is required".to_string())?;
+        let reviewer_id = self.reviewer_id.ok_or_else(|| "reviewer_id is required".to_string())?;
 
         Ok(Appraisal {
             id: Uuid::new_v4(),
@@ -348,6 +368,9 @@ impl AppraisalBuilder {
             status: self.status.unwrap_or_default(),
             overall_rating: self.overall_rating,
             submitted_at: self.submitted_at,
+            self_review: self.self_review,
+            manager_review: self.manager_review,
+            rated_at: self.rated_at,
             metadata: AuditMetadata::default(),
         })
     }

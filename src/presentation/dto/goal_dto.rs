@@ -5,10 +5,10 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
-use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use chrono::{DateTime, Utc};
+use rust_decimal::Decimal;
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -17,8 +17,8 @@ use utoipa::ToSchema;
 #[cfg(feature = "validation")]
 use validator::Validate;
 
-use crate::domain::entity::AuditMetadata;
 use crate::domain::entity::Goal;
+use crate::domain::entity::AuditMetadata;
 use crate::domain::entity::GoalStatus;
 
 // =============================================================================
@@ -34,10 +34,7 @@ use crate::domain::entity::GoalStatus;
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateGoalDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -51,11 +48,7 @@ pub struct CreateGoalDto {
     pub weight: Option<Decimal>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub progress: Option<Decimal>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "parent_goal_id"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "parent_goal_id")]
     pub parent_goal_id: Option<Uuid>,
     pub status: GoalStatus,
 }
@@ -73,10 +66,7 @@ pub struct CreateGoalDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateGoalDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -90,11 +80,7 @@ pub struct UpdateGoalDto {
     pub weight: Option<Decimal>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub progress: Option<Decimal>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "parent_goal_id"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "parent_goal_id")]
     pub parent_goal_id: Option<Uuid>,
     pub status: GoalStatus,
 }
@@ -112,10 +98,7 @@ pub struct UpdateGoalDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchGoalDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "employee_id")]
     pub employee_id: Option<Uuid>,
     #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -139,14 +122,7 @@ pub struct PatchGoalDto {
 impl PatchGoalDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.employee_id.is_some()
-            || self.cycle_id.is_some()
-            || self.title.is_some()
-            || self.description.is_some()
-            || self.weight.is_some()
-            || self.progress.is_some()
-            || self.parent_goal_id.is_some()
-            || self.status.is_some()
+        self.employee_id.is_some() || self.cycle_id.is_some() || self.title.is_some() || self.description.is_some() || self.weight.is_some() || self.progress.is_some() || self.parent_goal_id.is_some() || self.status.is_some()
     }
 }
 
@@ -162,15 +138,9 @@ impl PatchGoalDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct GoalResponseDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub employee_id: Uuid,
     pub cycle_id: Option<Uuid>,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]

@@ -5,10 +5,10 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
-use chrono::{DateTime, NaiveDate, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use chrono::{DateTime, Utc, NaiveDate};
+use rust_decimal::Decimal;
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -17,8 +17,8 @@ use utoipa::ToSchema;
 #[cfg(feature = "validation")]
 use validator::Validate;
 
-use crate::domain::entity::AuditMetadata;
 use crate::domain::entity::Reward;
+use crate::domain::entity::AuditMetadata;
 use crate::domain::entity::RewardType;
 
 // =============================================================================
@@ -34,10 +34,7 @@ use crate::domain::entity::RewardType;
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateRewardDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -56,11 +53,7 @@ pub struct CreateRewardDto {
     #[cfg_attr(feature = "openapi", schema(example = "2024-01-01"))]
     #[serde(alias = "awarded_at")]
     pub awarded_at: NaiveDate,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "payroll_component_id"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "payroll_component_id")]
     pub payroll_component_id: Option<Uuid>,
 }
 
@@ -77,10 +70,7 @@ pub struct CreateRewardDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateRewardDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -99,11 +89,7 @@ pub struct UpdateRewardDto {
     #[cfg_attr(feature = "openapi", schema(example = "2024-01-01"))]
     #[serde(alias = "awarded_at")]
     pub awarded_at: NaiveDate,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "payroll_component_id"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "payroll_component_id")]
     pub payroll_component_id: Option<Uuid>,
 }
 
@@ -120,10 +106,7 @@ pub struct UpdateRewardDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchRewardDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "employee_id")]
     pub employee_id: Option<Uuid>,
     #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
@@ -143,25 +126,14 @@ pub struct PatchRewardDto {
     #[cfg_attr(feature = "openapi", schema(example = "2024-01-01"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "awarded_at")]
     pub awarded_at: Option<NaiveDate>,
-    #[serde(
-        skip_serializing_if = "Option::is_none",
-        alias = "payroll_component_id"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none", alias = "payroll_component_id")]
     pub payroll_component_id: Option<Uuid>,
 }
 
 impl PatchRewardDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.employee_id.is_some()
-            || self.cycle_id.is_some()
-            || self.reward_type.is_some()
-            || self.title.is_some()
-            || self.description.is_some()
-            || self.amount.is_some()
-            || self.awarded_by.is_some()
-            || self.awarded_at.is_some()
-            || self.payroll_component_id.is_some()
+        self.employee_id.is_some() || self.cycle_id.is_some() || self.reward_type.is_some() || self.title.is_some() || self.description.is_some() || self.amount.is_some() || self.awarded_by.is_some() || self.awarded_at.is_some() || self.payroll_component_id.is_some()
     }
 }
 
@@ -177,15 +149,9 @@ impl PatchRewardDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct RewardResponseDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub employee_id: Uuid,
     pub cycle_id: Option<Uuid>,
     pub reward_type: RewardType,

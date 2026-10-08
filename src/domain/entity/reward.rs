@@ -1,11 +1,11 @@
-use chrono::{DateTime, NaiveDate, Utc};
-use rust_decimal::Decimal;
+use chrono::{DateTime, Utc, NaiveDate};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
+use rust_decimal::Decimal;
 
-use super::AuditMetadata;
 use super::RewardType;
+use super::AuditMetadata;
 
 /// Strongly-typed ID for Reward
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -13,15 +13,9 @@ use super::RewardType;
 pub struct RewardId(pub Uuid);
 
 impl RewardId {
-    pub fn new(id: Uuid) -> Self {
-        Self(id)
-    }
-    pub fn generate() -> Self {
-        Self(Uuid::new_v4())
-    }
-    pub fn into_inner(self) -> Uuid {
-        self.0
-    }
+    pub fn new(id: Uuid) -> Self { Self(id) }
+    pub fn generate() -> Self { Self(Uuid::new_v4()) }
+    pub fn into_inner(self) -> Uuid { self.0 }
 }
 
 impl std::fmt::Display for RewardId {
@@ -38,28 +32,20 @@ impl std::str::FromStr for RewardId {
 }
 
 impl From<Uuid> for RewardId {
-    fn from(id: Uuid) -> Self {
-        Self(id)
-    }
+    fn from(id: Uuid) -> Self { Self(id) }
 }
 
 impl From<RewardId> for Uuid {
-    fn from(id: RewardId) -> Self {
-        id.0
-    }
+    fn from(id: RewardId) -> Self { id.0 }
 }
 
 impl AsRef<Uuid> for RewardId {
-    fn as_ref(&self) -> &Uuid {
-        &self.0
-    }
+    fn as_ref(&self) -> &Uuid { &self.0 }
 }
 
 impl std::ops::Deref for RewardId {
     type Target = Uuid;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+    fn deref(&self) -> &Self::Target { &self.0 }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
@@ -86,12 +72,7 @@ impl Reward {
     }
 
     /// Create a new Reward with required fields
-    pub fn new(
-        employee_id: Uuid,
-        reward_type: RewardType,
-        title: String,
-        awarded_at: NaiveDate,
-    ) -> Self {
+    pub fn new(employee_id: Uuid, reward_type: RewardType, title: String, awarded_at: NaiveDate) -> Self {
         Self {
             id: Uuid::new_v4(),
             employee_id,
@@ -157,6 +138,7 @@ impl Reward {
         self.metadata.deleted_by.as_ref()
     }
 
+
     // ==========================================================
     // Fluent Setters (with_* for optional fields)
     // ==========================================================
@@ -200,49 +182,31 @@ impl Reward {
         for (key, value) in fields {
             match key.as_str() {
                 "employee_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.employee_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.employee_id = v; }
                 }
                 "cycle_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.cycle_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.cycle_id = v; }
                 }
                 "reward_type" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.reward_type = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.reward_type = v; }
                 }
                 "title" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.title = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.title = v; }
                 }
                 "description" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.description = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.description = v; }
                 }
                 "amount" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.amount = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.amount = v; }
                 }
                 "awarded_by" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.awarded_by = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.awarded_by = v; }
                 }
                 "awarded_at" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.awarded_at = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.awarded_at = v; }
                 }
                 "payroll_component_id" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.payroll_component_id = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.payroll_component_id = v; }
                 }
                 _ => {} // ignore unknown fields
             }
@@ -302,6 +266,7 @@ impl backbone_orm::EntityRepoMeta for Reward {
         m.insert("cycle_id".to_string(), "uuid".to_string());
         m.insert("payroll_component_id".to_string(), "uuid".to_string());
         m.insert("reward_type".to_string(), "reward_type".to_string());
+        m.insert("awarded_at".to_string(), "date".to_string());
         m
     }
     fn search_fields() -> &'static [&'static str] {
@@ -385,13 +350,9 @@ impl RewardBuilder {
     ///
     /// Returns Err if any required field without a default is missing.
     pub fn build(self) -> Result<Reward, String> {
-        let employee_id = self
-            .employee_id
-            .ok_or_else(|| "employee_id is required".to_string())?;
+        let employee_id = self.employee_id.ok_or_else(|| "employee_id is required".to_string())?;
         let title = self.title.ok_or_else(|| "title is required".to_string())?;
-        let awarded_at = self
-            .awarded_at
-            .ok_or_else(|| "awarded_at is required".to_string())?;
+        let awarded_at = self.awarded_at.ok_or_else(|| "awarded_at is required".to_string())?;
 
         Ok(Reward {
             id: Uuid::new_v4(),

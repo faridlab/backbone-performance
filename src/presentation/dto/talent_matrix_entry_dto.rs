@@ -5,9 +5,9 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
-use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use chrono::{DateTime, Utc};
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -16,8 +16,8 @@ use utoipa::ToSchema;
 #[cfg(feature = "validation")]
 use validator::Validate;
 
-use crate::domain::entity::AuditMetadata;
 use crate::domain::entity::TalentMatrixEntry;
+use crate::domain::entity::AuditMetadata;
 
 // =============================================================================
 // Create DTO
@@ -32,16 +32,10 @@ use crate::domain::entity::TalentMatrixEntry;
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateTalentMatrixEntryDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "cycle_id")]
     pub cycle_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = 42))]
@@ -68,16 +62,10 @@ pub struct CreateTalentMatrixEntryDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateTalentMatrixEntryDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "cycle_id")]
     pub cycle_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = 42))]
@@ -104,16 +92,10 @@ pub struct UpdateTalentMatrixEntryDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchTalentMatrixEntryDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "employee_id")]
     pub employee_id: Option<Uuid>,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
     #[cfg_attr(feature = "openapi", schema(example = 42))]
@@ -130,11 +112,7 @@ pub struct PatchTalentMatrixEntryDto {
 impl PatchTalentMatrixEntryDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.employee_id.is_some()
-            || self.cycle_id.is_some()
-            || self.performance_score.is_some()
-            || self.potential_score.is_some()
-            || self.box_label.is_some()
+        self.employee_id.is_some() || self.cycle_id.is_some() || self.performance_score.is_some() || self.potential_score.is_some() || self.box_label.is_some()
     }
 }
 
@@ -150,20 +128,11 @@ impl PatchTalentMatrixEntryDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct TalentMatrixEntryResponseDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub cycle_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = 42))]
     pub performance_score: i32,
@@ -203,12 +172,7 @@ pub struct TalentMatrixEntryListResponseDto {
 
 impl TalentMatrixEntryListResponseDto {
     /// Create a new list response from items and pagination info
-    pub fn new(
-        items: Vec<TalentMatrixEntryResponseDto>,
-        total: u64,
-        page: u32,
-        per_page: u32,
-    ) -> Self {
+    pub fn new(items: Vec<TalentMatrixEntryResponseDto>, total: u64, page: u32, per_page: u32) -> Self {
         let total_pages = if per_page > 0 {
             ((total as f64) / (per_page as f64)).ceil() as u32
         } else {
@@ -304,10 +268,7 @@ impl backbone_core::FromCreateDto<CreateTalentMatrixEntryDto> for TalentMatrixEn
 }
 
 impl backbone_core::ApplyUpdateDto<UpdateTalentMatrixEntryDto> for TalentMatrixEntry {
-    fn apply_update(
-        mut self,
-        dto: UpdateTalentMatrixEntryDto,
-    ) -> backbone_core::ServiceResult<Self> {
+    fn apply_update(mut self, dto: UpdateTalentMatrixEntryDto) -> backbone_core::ServiceResult<Self> {
         self.employee_id = dto.employee_id;
         self.cycle_id = dto.cycle_id;
         self.performance_score = dto.performance_score;

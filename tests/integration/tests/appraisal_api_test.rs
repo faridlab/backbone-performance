@@ -5,11 +5,11 @@
 //! Tests the Appraisal CRUD API endpoints.
 
 use chrono::Utc;
+use crate::integration::framework::ApiTest;
 use serde_json::{json, Value};
 use uuid::Uuid;
 
 use super::crud_test_base::{CrudTestConfig, GenericCrudTest, TestDataGenerator};
-use crate::integration::framework::ApiTest;
 use crate::integration::helpers::CommonUtils;
 
 // ============================================================================
@@ -30,6 +30,9 @@ impl TestDataGenerator for AppraisalTestData {
             "status": "draft",
             "overall_rating": null,
             "submitted_at": now,
+            "self_review": null,
+            "manager_review": null,
+            "rated_at": now,
             "metadata": json!({}),
         })
     }
@@ -44,6 +47,9 @@ impl TestDataGenerator for AppraisalTestData {
             "status": "draft",
             "overall_rating": null,
             "submitted_at": now,
+            "self_review": null,
+            "manager_review": null,
+            "rated_at": now,
             "metadata": json!({}),
         })
     }
@@ -56,13 +62,7 @@ impl TestDataGenerator for AppraisalTestData {
 
     async fn seed_dependencies(&self, api: &ApiTest) -> Vec<(String, String)> {
         let mut deps: Vec<(String, String)> = Vec::new();
-        if let Some(id) = super::crud_test_base::create_and_get_id(
-            api,
-            "/api/v1/appraisal_cycles",
-            &super::appraisal_cycle_api_test::AppraisalCycleTestData,
-        )
-        .await
-        {
+        if let Some(id) = super::crud_test_base::create_and_get_id(api, "/api/v1/appraisal_cycles", &super::appraisal_cycle_api_test::AppraisalCycleTestData).await {
             deps.push(("cycle_id".to_string(), id));
         }
         deps

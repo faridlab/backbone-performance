@@ -5,9 +5,9 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
-use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use chrono::{DateTime, Utc};
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -16,8 +16,8 @@ use utoipa::ToSchema;
 #[cfg(feature = "validation")]
 use validator::Validate;
 
-use crate::domain::entity::AuditMetadata;
 use crate::domain::entity::Feedback;
+use crate::domain::entity::AuditMetadata;
 use crate::domain::entity::FeedbackRelationship;
 
 // =============================================================================
@@ -35,16 +35,10 @@ use crate::domain::entity::FeedbackRelationship;
 pub struct CreateFeedbackDto {
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "from_employee_id")]
     pub from_employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "to_employee_id")]
     pub to_employee_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
@@ -70,16 +64,10 @@ pub struct CreateFeedbackDto {
 pub struct UpdateFeedbackDto {
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "from_employee_id")]
     pub from_employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "to_employee_id")]
     pub to_employee_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
@@ -105,16 +93,10 @@ pub struct UpdateFeedbackDto {
 pub struct PatchFeedbackDto {
     #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "from_employee_id")]
     pub from_employee_id: Option<Uuid>,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "to_employee_id")]
     pub to_employee_id: Option<Uuid>,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
@@ -130,12 +112,7 @@ pub struct PatchFeedbackDto {
 impl PatchFeedbackDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.cycle_id.is_some()
-            || self.from_employee_id.is_some()
-            || self.to_employee_id.is_some()
-            || self.content.is_some()
-            || self.is_anonymous.is_some()
-            || self.relationship.is_some()
+        self.cycle_id.is_some() || self.from_employee_id.is_some() || self.to_employee_id.is_some() || self.content.is_some() || self.is_anonymous.is_some() || self.relationship.is_some()
     }
 }
 
@@ -151,21 +128,12 @@ impl PatchFeedbackDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct FeedbackResponseDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub id: Uuid,
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub from_employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub to_employee_id: Uuid,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     pub content: String,

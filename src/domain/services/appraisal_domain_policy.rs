@@ -5,8 +5,8 @@
 //! `DomainPolicy` enforces pure business invariants (state-based rules).
 //! Identity-based rules live in `backbone_auth::ResourcePolicy`.
 
-use crate::domain::entity::Appraisal;
 use backbone_core::PermitAllPolicy;
+use crate::domain::entity::Appraisal;
 
 /// Domain policy for Appraisal — permits all operations (no business invariants).
 ///

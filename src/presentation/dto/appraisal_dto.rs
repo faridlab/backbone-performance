@@ -5,10 +5,10 @@
 //! DTOs provide a clean separation between domain entities and API
 //! representations, with validation and OpenAPI documentation support.
 
-use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use chrono::{DateTime, Utc};
+use rust_decimal::Decimal;
 
 #[cfg(feature = "openapi")]
 #[cfg(feature = "openapi")]
@@ -18,8 +18,8 @@ use utoipa::ToSchema;
 use validator::Validate;
 
 use crate::domain::entity::Appraisal;
-use crate::domain::entity::AppraisalStatus;
 use crate::domain::entity::AuditMetadata;
+use crate::domain::entity::AppraisalStatus;
 
 // =============================================================================
 // Create DTO
@@ -34,37 +34,26 @@ use crate::domain::entity::AuditMetadata;
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct CreateAppraisalDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "cycle_id")]
     pub cycle_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "reviewer_id")]
     pub reviewer_id: Uuid,
     pub status: AppraisalStatus,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "overall_rating"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "overall_rating")]
     pub overall_rating: Option<Decimal>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "submitted_at"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "submitted_at")]
     pub submitted_at: Option<DateTime<Utc>>,
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "self_review")]
+    pub self_review: Option<serde_json::Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "manager_review")]
+    pub manager_review: Option<serde_json::Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "rated_at")]
+    pub rated_at: Option<DateTime<Utc>>,
 }
 
 // =============================================================================
@@ -80,37 +69,26 @@ pub struct CreateAppraisalDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateAppraisalDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "employee_id")]
     pub employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "cycle_id")]
     pub cycle_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "reviewer_id")]
     pub reviewer_id: Uuid,
     pub status: AppraisalStatus,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "overall_rating"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "overall_rating")]
     pub overall_rating: Option<Decimal>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "submitted_at"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "submitted_at")]
     pub submitted_at: Option<DateTime<Utc>>,
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "self_review")]
+    pub self_review: Option<serde_json::Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "manager_review")]
+    pub manager_review: Option<serde_json::Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "rated_at")]
+    pub rated_at: Option<DateTime<Utc>>,
 }
 
 // =============================================================================
@@ -126,22 +104,13 @@ pub struct UpdateAppraisalDto {
 #[cfg_attr(feature = "validation", derive(Validate))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchAppraisalDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "employee_id")]
     pub employee_id: Option<Uuid>,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "reviewer_id")]
     pub reviewer_id: Option<Uuid>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -150,17 +119,18 @@ pub struct PatchAppraisalDto {
     pub overall_rating: Option<Decimal>,
     #[serde(skip_serializing_if = "Option::is_none", alias = "submitted_at")]
     pub submitted_at: Option<DateTime<Utc>>,
+    #[serde(skip_serializing_if = "Option::is_none", alias = "self_review")]
+    pub self_review: Option<serde_json::Value>,
+    #[serde(skip_serializing_if = "Option::is_none", alias = "manager_review")]
+    pub manager_review: Option<serde_json::Value>,
+    #[serde(skip_serializing_if = "Option::is_none", alias = "rated_at")]
+    pub rated_at: Option<DateTime<Utc>>,
 }
 
 impl PatchAppraisalDto {
     /// Check if any field is set
     pub fn has_changes(&self) -> bool {
-        self.employee_id.is_some()
-            || self.cycle_id.is_some()
-            || self.reviewer_id.is_some()
-            || self.status.is_some()
-            || self.overall_rating.is_some()
-            || self.submitted_at.is_some()
+        self.employee_id.is_some() || self.cycle_id.is_some() || self.reviewer_id.is_some() || self.status.is_some() || self.overall_rating.is_some() || self.submitted_at.is_some() || self.self_review.is_some() || self.manager_review.is_some() || self.rated_at.is_some()
     }
 }
 
@@ -176,29 +146,20 @@ impl PatchAppraisalDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct AppraisalResponseDto {
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub employee_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub cycle_id: Uuid,
-    #[cfg_attr(
-        feature = "openapi",
-        schema(example = "550e8400-e29b-41d4-a716-446655440000")
-    )]
+    #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     pub reviewer_id: Uuid,
     pub status: AppraisalStatus,
     pub overall_rating: Option<Decimal>,
     pub submitted_at: Option<DateTime<Utc>>,
+    pub self_review: Option<serde_json::Value>,
+    pub manager_review: Option<serde_json::Value>,
+    pub rated_at: Option<DateTime<Utc>>,
     pub metadata: AuditMetadata,
 }
 
@@ -276,6 +237,9 @@ impl From<Appraisal> for AppraisalResponseDto {
             status: entity.status,
             overall_rating: entity.overall_rating,
             submitted_at: entity.submitted_at,
+            self_review: entity.self_review,
+            manager_review: entity.manager_review,
+            rated_at: entity.rated_at,
             metadata: entity.metadata,
         }
     }
@@ -304,6 +268,9 @@ impl From<CreateAppraisalDto> for Appraisal {
             status: dto.status,
             overall_rating: dto.overall_rating,
             submitted_at: dto.submitted_at,
+            self_review: dto.self_review,
+            manager_review: dto.manager_review,
+            rated_at: dto.rated_at,
             metadata: AuditMetadata::default(),
         }
     }
@@ -319,6 +286,9 @@ impl From<&Appraisal> for AppraisalResponseDto {
             status: entity.status.clone(),
             overall_rating: entity.overall_rating.clone(),
             submitted_at: entity.submitted_at.clone(),
+            self_review: entity.self_review.clone(),
+            manager_review: entity.manager_review.clone(),
+            rated_at: entity.rated_at.clone(),
             metadata: entity.metadata.clone(),
         }
     }
@@ -338,6 +308,9 @@ impl backbone_core::ApplyUpdateDto<UpdateAppraisalDto> for Appraisal {
         self.status = dto.status;
         self.overall_rating = dto.overall_rating;
         self.submitted_at = dto.submitted_at;
+        self.self_review = dto.self_review;
+        self.manager_review = dto.manager_review;
+        self.rated_at = dto.rated_at;
         Ok(self)
     }
 }

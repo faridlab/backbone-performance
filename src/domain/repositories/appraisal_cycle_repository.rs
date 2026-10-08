@@ -5,8 +5,8 @@
 //! This trait defines the repository contract for the AppraisalCycle aggregate.
 //! Implementation is in the infrastructure layer.
 
-use anyhow::Result;
 use async_trait::async_trait;
+use anyhow::Result;
 
 use crate::domain::entity::{AppraisalCycle, CycleStatus};
 
@@ -61,6 +61,7 @@ impl AppraisalCycleFilter {
 /// Implementations should be in the infrastructure layer.
 #[async_trait]
 pub trait AppraisalCycleRepository: Send + Sync {
+
     // =========================================================================
     // Core CRUD Operations
     // =========================================================================
@@ -85,17 +86,10 @@ pub trait AppraisalCycleRepository: Send + Sync {
     // =========================================================================
 
     /// List appraisal_cycle with pagination
-    async fn list(
-        &self,
-        params: AppraisalCyclePaginationParams,
-    ) -> Result<AppraisalCyclePaginatedResult>;
+    async fn list(&self, params: AppraisalCyclePaginationParams) -> Result<AppraisalCyclePaginatedResult>;
 
     /// List appraisal_cycle with pagination and filters
-    async fn list_with_filters(
-        &self,
-        params: AppraisalCyclePaginationParams,
-        filters: AppraisalCycleFilter,
-    ) -> Result<AppraisalCyclePaginatedResult>;
+    async fn list_with_filters(&self, params: AppraisalCyclePaginationParams, filters: AppraisalCycleFilter) -> Result<AppraisalCyclePaginatedResult>;
 
     /// Count all appraisal_cycle entities
     async fn count(&self) -> Result<u64>;
@@ -117,10 +111,7 @@ pub trait AppraisalCycleRepository: Send + Sync {
     async fn restore(&self, id: &str) -> Result<Option<AppraisalCycle>>;
 
     /// List soft-deleted appraisal_cycle entities
-    async fn list_deleted(
-        &self,
-        params: AppraisalCyclePaginationParams,
-    ) -> Result<AppraisalCyclePaginatedResult>;
+    async fn list_deleted(&self, params: AppraisalCyclePaginationParams) -> Result<AppraisalCyclePaginatedResult>;
 
     /// Empty trash (permanently delete all soft-deleted entities)
     async fn empty_trash(&self) -> Result<u64>;

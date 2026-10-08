@@ -1,10 +1,10 @@
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::{DateTime, Utc, NaiveDate};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
 
-use super::AuditMetadata;
 use super::CycleStatus;
+use super::AuditMetadata;
 
 /// Strongly-typed ID for AppraisalCycle
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -12,15 +12,9 @@ use super::CycleStatus;
 pub struct AppraisalCycleId(pub Uuid);
 
 impl AppraisalCycleId {
-    pub fn new(id: Uuid) -> Self {
-        Self(id)
-    }
-    pub fn generate() -> Self {
-        Self(Uuid::new_v4())
-    }
-    pub fn into_inner(self) -> Uuid {
-        self.0
-    }
+    pub fn new(id: Uuid) -> Self { Self(id) }
+    pub fn generate() -> Self { Self(Uuid::new_v4()) }
+    pub fn into_inner(self) -> Uuid { self.0 }
 }
 
 impl std::fmt::Display for AppraisalCycleId {
@@ -37,28 +31,20 @@ impl std::str::FromStr for AppraisalCycleId {
 }
 
 impl From<Uuid> for AppraisalCycleId {
-    fn from(id: Uuid) -> Self {
-        Self(id)
-    }
+    fn from(id: Uuid) -> Self { Self(id) }
 }
 
 impl From<AppraisalCycleId> for Uuid {
-    fn from(id: AppraisalCycleId) -> Self {
-        id.0
-    }
+    fn from(id: AppraisalCycleId) -> Self { id.0 }
 }
 
 impl AsRef<Uuid> for AppraisalCycleId {
-    fn as_ref(&self) -> &Uuid {
-        &self.0
-    }
+    fn as_ref(&self) -> &Uuid { &self.0 }
 }
 
 impl std::ops::Deref for AppraisalCycleId {
     type Target = Uuid;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+    fn deref(&self) -> &Self::Target { &self.0 }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
@@ -81,12 +67,7 @@ impl AppraisalCycle {
     }
 
     /// Create a new AppraisalCycle with required fields
-    pub fn new(
-        name: String,
-        period_start: NaiveDate,
-        period_end: NaiveDate,
-        status: CycleStatus,
-    ) -> Self {
+    pub fn new(name: String, period_start: NaiveDate, period_end: NaiveDate, status: CycleStatus) -> Self {
         Self {
             id: Uuid::new_v4(),
             name,
@@ -153,6 +134,7 @@ impl AppraisalCycle {
         &self.status
     }
 
+
     // ==========================================================
     // Fluent Setters (with_* for optional fields)
     // ==========================================================
@@ -172,29 +154,19 @@ impl AppraisalCycle {
         for (key, value) in fields {
             match key.as_str() {
                 "name" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.name = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.name = v; }
                 }
                 "cycle_type" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.cycle_type = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.cycle_type = v; }
                 }
                 "period_start" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.period_start = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.period_start = v; }
                 }
                 "period_end" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.period_end = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.period_end = v; }
                 }
                 "status" => {
-                    if let Ok(v) = serde_json::from_value(value) {
-                        self.status = v;
-                    }
+                    if let Ok(v) = serde_json::from_value(value) { self.status = v; }
                 }
                 _ => {} // ignore unknown fields
             }
@@ -251,6 +223,8 @@ impl backbone_orm::EntityRepoMeta for AppraisalCycle {
         let mut m = std::collections::HashMap::new();
         m.insert("id".to_string(), "uuid".to_string());
         m.insert("status".to_string(), "cycle_status".to_string());
+        m.insert("period_start".to_string(), "date".to_string());
+        m.insert("period_end".to_string(), "date".to_string());
         m
     }
     fn search_fields() -> &'static [&'static str] {
@@ -307,12 +281,8 @@ impl AppraisalCycleBuilder {
     /// Returns Err if any required field without a default is missing.
     pub fn build(self) -> Result<AppraisalCycle, String> {
         let name = self.name.ok_or_else(|| "name is required".to_string())?;
-        let period_start = self
-            .period_start
-            .ok_or_else(|| "period_start is required".to_string())?;
-        let period_end = self
-            .period_end
-            .ok_or_else(|| "period_end is required".to_string())?;
+        let period_start = self.period_start.ok_or_else(|| "period_start is required".to_string())?;
+        let period_end = self.period_end.ok_or_else(|| "period_end is required".to_string())?;
 
         Ok(AppraisalCycle {
             id: Uuid::new_v4(),
