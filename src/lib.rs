@@ -27,6 +27,16 @@ pub mod exports;
 // <<< CUSTOM MODULES
 // END CUSTOM
 
+// The module's extension (hand-written; ADR-0031).
+#[path = "lib.ext.rs"]
+mod lib_ext;
+pub use lib_ext::*;
+/// This crate's module and builder under fixed names, for the extension's `impl` blocks.
+#[allow(dead_code)]
+pub(crate) type ThisModule = PerformanceModule;
+#[allow(dead_code)]
+pub(crate) type ThisModuleBuilder = PerformanceModuleBuilder;
+
 // Re-exports for convenience - Domain entities
 pub use domain::entity::*;
 
@@ -67,12 +77,41 @@ pub struct PerformanceModule {
     pub(crate) goal_service: Arc<GoalService>,
     pub(crate) reward_service: Arc<RewardService>,
     pub(crate) talent_matrix_entry_service: Arc<TalentMatrixEntryService>,
+    /// The module's extension state (`lib.ext.rs`); its fields read through `Deref`.
+    pub(crate) ext: ModuleExt,
     // <<< CUSTOM FIELDS
-    /// The validated write engine: cycles, goals, appraisals. Generic CRUD
-    /// on an appraisal row bypasses the finalised predicate — use this for
-    /// every state change.
-    pub performance_write_service: Arc<application::service::PerformanceWriteService>,
     // END CUSTOM
+}
+
+impl std::ops::Deref for PerformanceModule {
+    type Target = ModuleExt;
+    fn deref(&self) -> &Self::Target {
+        &self.ext
+    }
+}
+
+impl std::ops::DerefMut for PerformanceModule {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.ext
+    }
+}
+
+/// What the extension's `build` hook receives from the generated build (ADR-0031).
+#[allow(dead_code)]
+pub(crate) struct ModuleParts<'a> {
+    pub(crate) db_pool: &'a PgPool,
+    pub(crate) appraisal_service: &'a Arc<AppraisalService>,
+    pub(crate) appraisal_repository: &'a Arc<AppraisalRepository>,
+    pub(crate) appraisal_cycle_service: &'a Arc<AppraisalCycleService>,
+    pub(crate) appraisal_cycle_repository: &'a Arc<AppraisalCycleRepository>,
+    pub(crate) feedback_service: &'a Arc<FeedbackService>,
+    pub(crate) feedback_repository: &'a Arc<FeedbackRepository>,
+    pub(crate) goal_service: &'a Arc<GoalService>,
+    pub(crate) goal_repository: &'a Arc<GoalRepository>,
+    pub(crate) reward_service: &'a Arc<RewardService>,
+    pub(crate) reward_repository: &'a Arc<RewardRepository>,
+    pub(crate) talent_matrix_entry_service: &'a Arc<TalentMatrixEntryService>,
+    pub(crate) talent_matrix_entry_repository: &'a Arc<TalentMatrixEntryRepository>,
 }
 
 impl PerformanceModule {
@@ -146,8 +185,23 @@ impl PerformanceModule {
 /// Builder for PerformanceModule
 pub struct PerformanceModuleBuilder {
     db_pool: Option<PgPool>,
+    /// The builder's extension state (`lib.ext.rs`); its fields read through `Deref`.
+    ext: ModuleBuilderExt,
     // <<< CUSTOM BUILDER FIELDS
     // END CUSTOM
+}
+
+impl std::ops::Deref for PerformanceModuleBuilder {
+    type Target = ModuleBuilderExt;
+    fn deref(&self) -> &Self::Target {
+        &self.ext
+    }
+}
+
+impl std::ops::DerefMut for PerformanceModuleBuilder {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.ext
+    }
 }
 
 impl PerformanceModuleBuilder {
@@ -155,6 +209,7 @@ impl PerformanceModuleBuilder {
     pub fn new() -> Self {
         Self {
             db_pool: None,
+            ext: Default::default(),
             // <<< CUSTOM BUILDER DEFAULTS
             // END CUSTOM
         }
@@ -199,10 +254,24 @@ impl PerformanceModuleBuilder {
         let talent_matrix_entry_service = Arc::new(TalentMatrixEntryService::with_repository(talent_matrix_entry_repository.clone()));
 
         // <<< CUSTOM
-        // The validated write engine, self-constructed from the pool.
-        let performance_write_service =
-            Arc::new(application::service::PerformanceWriteService::new(db_pool.clone()));
         // END CUSTOM
+
+        // The extension builds its own state from what the generated build made.
+        let ext = self.ext.build(&ModuleParts {
+            db_pool: &db_pool,
+            appraisal_service: &appraisal_service,
+            appraisal_repository: &appraisal_repository,
+            appraisal_cycle_service: &appraisal_cycle_service,
+            appraisal_cycle_repository: &appraisal_cycle_repository,
+            feedback_service: &feedback_service,
+            feedback_repository: &feedback_repository,
+            goal_service: &goal_service,
+            goal_repository: &goal_repository,
+            reward_service: &reward_service,
+            reward_repository: &reward_repository,
+            talent_matrix_entry_service: &talent_matrix_entry_service,
+            talent_matrix_entry_repository: &talent_matrix_entry_repository,
+        })?;
 
         Ok(PerformanceModule {
             appraisal_service,
@@ -211,8 +280,8 @@ impl PerformanceModuleBuilder {
             goal_service,
             reward_service,
             talent_matrix_entry_service,
+            ext,
             // <<< CUSTOM
-            performance_write_service,
             // END CUSTOM
         })
     }

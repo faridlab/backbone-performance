@@ -13,7 +13,6 @@ pub mod reward_handler;
 pub mod talent_matrix_entry_handler;
 
 // <<< CUSTOM
-pub mod guarded_routes;
 // END CUSTOM
 
 // Re-exports
@@ -25,3 +24,6 @@ pub use reward_handler::{create_reward_routes, create_reward_read_routes, create
 pub use talent_matrix_entry_handler::{create_talent_matrix_entry_routes, create_talent_matrix_entry_read_routes, create_talent_matrix_entry_write_routes};
 // <<< CUSTOM
 // END CUSTOM
+
+// This directory's extension (hand-written; ADR-0031).
+include!("mod.ext.rs");
