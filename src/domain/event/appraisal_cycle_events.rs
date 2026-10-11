@@ -11,8 +11,6 @@ use crate::domain::entity::AppraisalCycle;
 /// enum containing a `Crud(CrudEvent<AppraisalCycle>)` variant.
 pub type AppraisalCycleEvent = CrudEvent<AppraisalCycle>;
 
-// <<< CUSTOM
-// END CUSTOM
 
 use backbone_messaging::{CrudEventPublisher, NoOpCrudEventPublisher};
 use std::sync::Arc;

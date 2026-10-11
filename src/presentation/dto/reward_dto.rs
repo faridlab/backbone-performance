@@ -322,7 +322,7 @@ impl backbone_core::ApplyUpdateDto<UpdateRewardDto> for Reward {
 // Custom DTOs
 // =============================================================================
 
-// <<< CUSTOM DTOs
 // Add custom DTOs specific to Reward here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
+

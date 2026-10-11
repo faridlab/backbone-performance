@@ -18,5 +18,3 @@ use crate::domain::entity::Reward;
 /// service. `PermitAllPolicy` is the safe default until then.
 pub type RewardDomainPolicy = PermitAllPolicy<Reward>;
 
-// <<< CUSTOM
-// END CUSTOM

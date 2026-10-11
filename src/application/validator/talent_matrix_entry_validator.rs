@@ -18,9 +18,5 @@ pub fn talent_matrix_entry_validator() -> TalentMatrixEntryValidator {
         .rule(NonNegative::new("performance_score", |e: &TalentMatrixEntry| e.performance_score as i64))
         .rule(NonNegative::new("potential_score", |e: &TalentMatrixEntry| e.potential_score as i64))
         .rule(OptionalNotBlank::new("box_label", |e: &TalentMatrixEntry| e.box_label.as_deref()))
-    // <<< CUSTOM RULES
-    // END CUSTOM RULES
 }
 
-// <<< CUSTOM
-// END CUSTOM

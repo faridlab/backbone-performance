@@ -32,5 +32,3 @@ pub type AppraisalService = GenericCrudService<
     AppraisalRepository,
 >;
 
-// <<< CUSTOM
-// END CUSTOM

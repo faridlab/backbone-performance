@@ -187,3 +187,4 @@ pub fn create_protected_appraisal_cycle_routes<A: AuthMiddleware + Send + Sync +
             }
         }))
 }
+

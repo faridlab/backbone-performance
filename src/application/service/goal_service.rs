@@ -32,5 +32,3 @@ pub type GoalService = GenericCrudService<
     GoalRepository,
 >;
 
-// <<< CUSTOM
-// END CUSTOM

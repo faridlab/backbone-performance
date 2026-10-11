@@ -282,7 +282,7 @@ impl backbone_core::ApplyUpdateDto<UpdateTalentMatrixEntryDto> for TalentMatrixE
 // Custom DTOs
 // =============================================================================
 
-// <<< CUSTOM DTOs
 // Add custom DTOs specific to TalentMatrixEntry here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
+

@@ -16,9 +16,5 @@ pub type FeedbackValidator = EntityValidator<Feedback>;
 pub fn feedback_validator() -> FeedbackValidator {
     EntityValidator::new()
         .rule(RequiredString::new("content", |e: &Feedback| &e.content))
-    // <<< CUSTOM RULES
-    // END CUSTOM RULES
 }
 
-// <<< CUSTOM
-// END CUSTOM

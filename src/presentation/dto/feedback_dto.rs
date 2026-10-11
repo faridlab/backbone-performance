@@ -287,7 +287,7 @@ impl backbone_core::ApplyUpdateDto<UpdateFeedbackDto> for Feedback {
 // Custom DTOs
 // =============================================================================
 
-// <<< CUSTOM DTOs
 // Add custom DTOs specific to Feedback here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
+

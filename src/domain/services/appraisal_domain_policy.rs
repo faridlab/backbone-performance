@@ -18,5 +18,3 @@ use crate::domain::entity::Appraisal;
 /// service. `PermitAllPolicy` is the safe default until then.
 pub type AppraisalDomainPolicy = PermitAllPolicy<Appraisal>;
 
-// <<< CUSTOM
-// END CUSTOM

@@ -32,5 +32,3 @@ pub type TalentMatrixEntryService = GenericCrudService<
     TalentMatrixEntryRepository,
 >;
 
-// <<< CUSTOM
-// END CUSTOM

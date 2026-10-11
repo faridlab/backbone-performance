@@ -186,3 +186,4 @@ pub fn create_protected_talent_matrix_entry_routes<A: AuthMiddleware + Send + Sy
             }
         }))
 }
+

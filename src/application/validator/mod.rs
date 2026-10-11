@@ -19,5 +19,3 @@ pub use goal_validator::{GoalValidator, goal_validator};
 pub use reward_validator::{RewardValidator, reward_validator};
 pub use talent_matrix_entry_validator::{TalentMatrixEntryValidator, talent_matrix_entry_validator};
 
-// <<< CUSTOM
-// END CUSTOM

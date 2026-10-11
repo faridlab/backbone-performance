@@ -32,5 +32,3 @@ pub type RewardService = GenericCrudService<
     RewardRepository,
 >;
 
-// <<< CUSTOM
-// END CUSTOM

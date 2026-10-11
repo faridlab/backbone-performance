@@ -17,9 +17,5 @@ pub fn appraisal_cycle_validator() -> AppraisalCycleValidator {
     EntityValidator::new()
         .rule(RequiredString::new("name", |e: &AppraisalCycle| &e.name))
         .rule(OptionalNotBlank::new("cycle_type", |e: &AppraisalCycle| e.cycle_type.as_deref()))
-    // <<< CUSTOM RULES
-    // END CUSTOM RULES
 }
 
-// <<< CUSTOM
-// END CUSTOM

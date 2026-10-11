@@ -111,6 +111,4 @@ mod tests {
 // CUSTOM TESTS
 // ============================================================================
 
-// <<< CUSTOM TESTS START >>>
 // Add Goal specific tests here
-// <<< CUSTOM TESTS END >>>

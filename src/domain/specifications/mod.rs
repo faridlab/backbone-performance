@@ -13,5 +13,3 @@ pub mod goal_specification;
 pub mod reward_specification;
 pub mod talent_matrix_entry_specification;
 
-// <<< CUSTOM
-// END CUSTOM

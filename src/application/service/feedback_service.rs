@@ -32,5 +32,3 @@ pub type FeedbackService = GenericCrudService<
     FeedbackRepository,
 >;
 
-// <<< CUSTOM
-// END CUSTOM

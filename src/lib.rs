@@ -24,8 +24,6 @@ pub mod application;
 pub mod presentation;
 pub mod seeders;
 pub mod exports;
-// <<< CUSTOM MODULES
-// END CUSTOM
 
 // The module's extension (hand-written; ADR-0031).
 #[path = "lib.ext.rs"]
@@ -79,8 +77,6 @@ pub struct PerformanceModule {
     pub(crate) talent_matrix_entry_service: Arc<TalentMatrixEntryService>,
     /// The module's extension state (`lib.ext.rs`); its fields read through `Deref`.
     pub(crate) ext: ModuleExt,
-    // <<< CUSTOM FIELDS
-    // END CUSTOM
 }
 
 impl std::ops::Deref for PerformanceModule {
@@ -178,8 +174,6 @@ impl PerformanceModule {
             .merge(create_talent_matrix_entry_read_routes(self.talent_matrix_entry_service.clone()))
     }
 
-    // <<< CUSTOM METHODS
-    // END CUSTOM
 }
 
 /// Builder for PerformanceModule
@@ -187,8 +181,6 @@ pub struct PerformanceModuleBuilder {
     db_pool: Option<PgPool>,
     /// The builder's extension state (`lib.ext.rs`); its fields read through `Deref`.
     ext: ModuleBuilderExt,
-    // <<< CUSTOM BUILDER FIELDS
-    // END CUSTOM
 }
 
 impl std::ops::Deref for PerformanceModuleBuilder {
@@ -210,8 +202,6 @@ impl PerformanceModuleBuilder {
         Self {
             db_pool: None,
             ext: Default::default(),
-            // <<< CUSTOM BUILDER DEFAULTS
-            // END CUSTOM
         }
     }
 
@@ -221,8 +211,6 @@ impl PerformanceModuleBuilder {
         self
     }
 
-    // <<< CUSTOM - custom builder methods
-    // END CUSTOM
 
     /// Build the module with configured dependencies
     pub fn build(self) -> anyhow::Result<PerformanceModule> {
@@ -253,8 +241,6 @@ impl PerformanceModuleBuilder {
         let talent_matrix_entry_repository = Arc::new(TalentMatrixEntryRepository::new(db_pool.clone()));
         let talent_matrix_entry_service = Arc::new(TalentMatrixEntryService::with_repository(talent_matrix_entry_repository.clone()));
 
-        // <<< CUSTOM
-        // END CUSTOM
 
         // The extension builds its own state from what the generated build made.
         let ext = self.ext.build(&ModuleParts {
@@ -281,8 +267,6 @@ impl PerformanceModuleBuilder {
             reward_service,
             talent_matrix_entry_service,
             ext,
-            // <<< CUSTOM
-            // END CUSTOM
         })
     }
 }

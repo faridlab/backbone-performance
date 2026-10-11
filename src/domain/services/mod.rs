@@ -16,5 +16,3 @@ pub use goal_domain_policy::GoalDomainPolicy;
 pub use reward_domain_policy::RewardDomainPolicy;
 pub use talent_matrix_entry_domain_policy::TalentMatrixEntryDomainPolicy;
 
-// <<< CUSTOM
-// END CUSTOM

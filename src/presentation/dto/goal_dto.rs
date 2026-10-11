@@ -305,7 +305,7 @@ impl backbone_core::ApplyUpdateDto<UpdateGoalDto> for Goal {
 // Custom DTOs
 // =============================================================================
 
-// <<< CUSTOM DTOs
 // Add custom DTOs specific to Goal here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
+

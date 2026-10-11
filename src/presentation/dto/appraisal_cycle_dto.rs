@@ -278,7 +278,7 @@ impl backbone_core::ApplyUpdateDto<UpdateAppraisalCycleDto> for AppraisalCycle {
 // Custom DTOs
 // =============================================================================
 
-// <<< CUSTOM DTOs
 // Add custom DTOs specific to AppraisalCycle here.
 // This section will be preserved during regeneration.
 // >>> END CUSTOM DTOs
+

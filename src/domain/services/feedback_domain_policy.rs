@@ -18,5 +18,3 @@ use crate::domain::entity::Feedback;
 /// service. `PermitAllPolicy` is the safe default until then.
 pub type FeedbackDomainPolicy = PermitAllPolicy<Feedback>;
 
-// <<< CUSTOM
-// END CUSTOM

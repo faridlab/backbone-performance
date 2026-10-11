@@ -11,8 +11,6 @@ use crate::domain::entity::TalentMatrixEntry;
 /// enum containing a `Crud(CrudEvent<TalentMatrixEntry>)` variant.
 pub type TalentMatrixEntryEvent = CrudEvent<TalentMatrixEntry>;
 
-// <<< CUSTOM
-// END CUSTOM
 
 use backbone_messaging::{CrudEventPublisher, NoOpCrudEventPublisher};
 use std::sync::Arc;

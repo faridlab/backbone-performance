@@ -17,9 +17,5 @@ pub fn reward_validator() -> RewardValidator {
     EntityValidator::new()
         .rule(RequiredString::new("title", |e: &Reward| &e.title))
         .rule(OptionalNotBlank::new("description", |e: &Reward| e.description.as_deref()))
-    // <<< CUSTOM RULES
-    // END CUSTOM RULES
 }
 
-// <<< CUSTOM
-// END CUSTOM

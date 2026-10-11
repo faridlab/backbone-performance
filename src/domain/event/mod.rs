@@ -28,5 +28,3 @@ pub use reward_event_handlers::RewardEventHandler;
 pub use talent_matrix_entry_events::{TalentMatrixEntryEvent, TalentMatrixEntryEventPublisher, NoopTalentMatrixEntryEventPublisher};
 pub use talent_matrix_entry_event_handlers::TalentMatrixEntryEventHandler;
 
-// <<< CUSTOM
-// END CUSTOM

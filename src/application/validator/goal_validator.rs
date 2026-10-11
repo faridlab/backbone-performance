@@ -17,9 +17,5 @@ pub fn goal_validator() -> GoalValidator {
     EntityValidator::new()
         .rule(RequiredString::new("title", |e: &Goal| &e.title))
         .rule(OptionalNotBlank::new("description", |e: &Goal| e.description.as_deref()))
-    // <<< CUSTOM RULES
-    // END CUSTOM RULES
 }
 
-// <<< CUSTOM
-// END CUSTOM
