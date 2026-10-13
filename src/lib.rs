@@ -49,9 +49,6 @@ pub use application::service::GoalService;
 pub use application::service::RewardService;
 pub use application::service::TalentMatrixEntryService;
 
-// Re-exports - Workflows
-pub use application::workflows::*;
-
 use std::sync::Arc;
 use axum::Router;
 use sqlx::PgPool;
