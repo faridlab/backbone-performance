@@ -229,6 +229,9 @@ impl backbone_orm::EntityRepoMeta for Feedback {
     fn search_fields() -> &'static [&'static str] {
         &["content"]
     }
+    fn relations() -> &'static [(&'static str, &'static str, &'static str)] {
+        &[("cycle", "appraisal_cycles", "cycleId")]
+    }
 }
 
 /// Builder for Feedback entity

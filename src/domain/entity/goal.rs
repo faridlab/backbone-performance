@@ -269,6 +269,9 @@ impl backbone_orm::EntityRepoMeta for Goal {
     fn search_fields() -> &'static [&'static str] {
         &["title"]
     }
+    fn relations() -> &'static [(&'static str, &'static str, &'static str)] {
+        &[("cycle", "appraisal_cycles", "cycleId"), ("parentGoal", "goals", "parentGoalId")]
+    }
 }
 
 /// Builder for Goal entity
