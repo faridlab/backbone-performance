@@ -32,3 +32,49 @@ pub type RewardService = GenericCrudService<
     RewardRepository,
 >;
 
+/// The rules the schema declares for Reward, checked against the row a create or update
+/// would store. The generated build attaches it to [`RewardService`]. A refusing rule's
+/// break answers 422; a rule in shadow is logged under `backbone::write_guard` and the
+/// write goes ahead.
+pub struct RewardRowRules;
+
+#[async_trait::async_trait]
+impl backbone_core::write_guard::WriteGuard<Reward> for RewardRowRules {
+    async fn check(
+        &self,
+        ctx: &backbone_core::write_guard::WriteCtx<'_, Reward>,
+    ) -> backbone_core::write_guard::GuardOutcome {
+        use backbone_core::row_rule as r;
+        use backbone_core::violation::Violation;
+        use backbone_core::write_guard::{GuardOutcome, WriteKind};
+        let (create, update) = (ctx.kind == WriteKind::Create, ctx.kind == WriteKind::Update);
+        let Some(after) = ctx.after.filter(|_| create || update) else {
+            return GuardOutcome::allow();
+        };
+        let Ok(row) = serde_json::to_value(after) else {
+            return GuardOutcome::allow();
+        };
+        let row = &row;
+        let old = ctx.before.and_then(|b| serde_json::to_value(b).ok());
+        let mut shadow = Vec::new();
+        let mut refuse = Vec::new();
+        // `employee_id_required` (@required on Reward.employee_id)
+        if (create || (update && r::changed(old.as_ref(), row, &["employee_id"]))) && !r::holds(&r::and(r::is_not_null(r::field(row, "employee_id")), r::not(r::is_empty(r::trim(r::field(row, "employee_id")))))) {
+            refuse.push(Violation::new("employee_id", "required", "employee_id is required"));
+        }
+        // `title_required` (@required on Reward.title)
+        if (create || (update && r::changed(old.as_ref(), row, &["title"]))) && !r::holds(&r::and(r::is_not_null(r::field(row, "title")), r::not(r::is_empty(r::trim(r::field(row, "title")))))) {
+            refuse.push(Violation::new("title", "required", "title is required"));
+        }
+        // `title_max_length` (@max(180) on Reward.title)
+        if (create || (update && r::changed(old.as_ref(), row, &["title"]))) && !r::holds(&r::le(r::length(r::field(row, "title")), r::Val::Num(180.0_f64))) {
+            shadow.push(Violation::new("title", "max_length", "title must be at most 180 characters").with_param("max", 180_i64));
+        }
+        // `amount_non_negative` (@non_negative on Reward.amount)
+        if (create || (update && r::changed(old.as_ref(), row, &["amount"]))) && !r::holds(&r::ge(r::field(row, "amount"), r::Val::Num(0.0_f64))) {
+            shadow.push(Violation::new("amount", "non_negative", "amount must not be negative"));
+        }
+        GuardOutcome { refuse, shadow }
+    }
+}
+

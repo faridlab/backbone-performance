@@ -21,6 +21,12 @@ pub use feedback_service::FeedbackService;
 pub use goal_service::GoalService;
 pub use reward_service::RewardService;
 pub use talent_matrix_entry_service::TalentMatrixEntryService;
+pub use appraisal_service::AppraisalRowRules;
+pub use appraisal_cycle_service::AppraisalCycleRowRules;
+pub use feedback_service::FeedbackRowRules;
+pub use goal_service::GoalRowRules;
+pub use reward_service::RewardRowRules;
+pub use talent_matrix_entry_service::TalentMatrixEntryRowRules;
 
 // This directory's extension (hand-written; ADR-0031).
 include!("mod.ext.rs");

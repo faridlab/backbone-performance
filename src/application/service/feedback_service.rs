@@ -32,3 +32,45 @@ pub type FeedbackService = GenericCrudService<
     FeedbackRepository,
 >;
 
+/// The rules the schema declares for Feedback, checked against the row a create or update
+/// would store. The generated build attaches it to [`FeedbackService`]. A refusing rule's
+/// break answers 422; a rule in shadow is logged under `backbone::write_guard` and the
+/// write goes ahead.
+pub struct FeedbackRowRules;
+
+#[async_trait::async_trait]
+impl backbone_core::write_guard::WriteGuard<Feedback> for FeedbackRowRules {
+    async fn check(
+        &self,
+        ctx: &backbone_core::write_guard::WriteCtx<'_, Feedback>,
+    ) -> backbone_core::write_guard::GuardOutcome {
+        use backbone_core::row_rule as r;
+        use backbone_core::violation::Violation;
+        use backbone_core::write_guard::{GuardOutcome, WriteKind};
+        let (create, update) = (ctx.kind == WriteKind::Create, ctx.kind == WriteKind::Update);
+        let Some(after) = ctx.after.filter(|_| create || update) else {
+            return GuardOutcome::allow();
+        };
+        let Ok(row) = serde_json::to_value(after) else {
+            return GuardOutcome::allow();
+        };
+        let row = &row;
+        let old = ctx.before.and_then(|b| serde_json::to_value(b).ok());
+        let shadow = Vec::new();
+        let mut refuse = Vec::new();
+        // `from_employee_id_required` (@required on Feedback.from_employee_id)
+        if (create || (update && r::changed(old.as_ref(), row, &["from_employee_id"]))) && !r::holds(&r::and(r::is_not_null(r::field(row, "from_employee_id")), r::not(r::is_empty(r::trim(r::field(row, "from_employee_id")))))) {
+            refuse.push(Violation::new("from_employee_id", "required", "from_employee_id is required"));
+        }
+        // `to_employee_id_required` (@required on Feedback.to_employee_id)
+        if (create || (update && r::changed(old.as_ref(), row, &["to_employee_id"]))) && !r::holds(&r::and(r::is_not_null(r::field(row, "to_employee_id")), r::not(r::is_empty(r::trim(r::field(row, "to_employee_id")))))) {
+            refuse.push(Violation::new("to_employee_id", "required", "to_employee_id is required"));
+        }
+        // `content_required` (@required on Feedback.content)
+        if (create || (update && r::changed(old.as_ref(), row, &["content"]))) && !r::holds(&r::and(r::is_not_null(r::field(row, "content")), r::not(r::is_empty(r::trim(r::field(row, "content")))))) {
+            refuse.push(Violation::new("content", "required", "content is required"));
+        }
+        GuardOutcome { refuse, shadow }
+    }
+}
+
