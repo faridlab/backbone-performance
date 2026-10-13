@@ -56,7 +56,7 @@ impl backbone_core::write_guard::WriteGuard<TalentMatrixEntry> for TalentMatrixE
         };
         let row = &row;
         let old = ctx.before.and_then(|b| serde_json::to_value(b).ok());
-        let mut shadow = Vec::new();
+        let shadow = Vec::new();
         let mut refuse = Vec::new();
         // `employee_id_required` (@required on TalentMatrixEntry.employee_id)
         if (create || (update && r::changed(old.as_ref(), row, &["employee_id"]))) && !r::holds(&r::and(r::is_not_null(r::field(row, "employee_id")), r::not(r::is_empty(r::trim(r::field(row, "employee_id")))))) {
@@ -68,15 +68,15 @@ impl backbone_core::write_guard::WriteGuard<TalentMatrixEntry> for TalentMatrixE
         }
         // `performance_score_non_negative` (@non_negative on TalentMatrixEntry.performance_score)
         if (create || (update && r::changed(old.as_ref(), row, &["performance_score"]))) && !r::holds(&r::ge(r::field(row, "performance_score"), r::Val::Num(0.0_f64))) {
-            shadow.push(Violation::new("performance_score", "non_negative", "performance_score must not be negative"));
+            refuse.push(Violation::new("performance_score", "non_negative", "performance_score must not be negative"));
         }
         // `potential_score_non_negative` (@non_negative on TalentMatrixEntry.potential_score)
         if (create || (update && r::changed(old.as_ref(), row, &["potential_score"]))) && !r::holds(&r::ge(r::field(row, "potential_score"), r::Val::Num(0.0_f64))) {
-            shadow.push(Violation::new("potential_score", "non_negative", "potential_score must not be negative"));
+            refuse.push(Violation::new("potential_score", "non_negative", "potential_score must not be negative"));
         }
         // `box_label_max_length` (@max(40) on TalentMatrixEntry.box_label)
         if (create || (update && r::changed(old.as_ref(), row, &["box_label"]))) && !r::holds(&r::le(r::length(r::field(row, "box_label")), r::Val::Num(40.0_f64))) {
-            shadow.push(Violation::new("box_label", "max_length", "box_label must be at most 40 characters").with_param("max", 40_i64));
+            refuse.push(Violation::new("box_label", "max_length", "box_label must be at most 40 characters").with_param("max", 40_i64));
         }
         GuardOutcome { refuse, shadow }
     }

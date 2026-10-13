@@ -56,7 +56,7 @@ impl backbone_core::write_guard::WriteGuard<Appraisal> for AppraisalRowRules {
         };
         let row = &row;
         let old = ctx.before.and_then(|b| serde_json::to_value(b).ok());
-        let mut shadow = Vec::new();
+        let shadow = Vec::new();
         let mut refuse = Vec::new();
         // `employee_id_required` (@required on Appraisal.employee_id)
         if (create || (update && r::changed(old.as_ref(), row, &["employee_id"]))) && !r::holds(&r::and(r::is_not_null(r::field(row, "employee_id")), r::not(r::is_empty(r::trim(r::field(row, "employee_id")))))) {
@@ -72,7 +72,7 @@ impl backbone_core::write_guard::WriteGuard<Appraisal> for AppraisalRowRules {
         }
         // `overall_rating_non_negative` (@non_negative on Appraisal.overall_rating)
         if (create || (update && r::changed(old.as_ref(), row, &["overall_rating"]))) && !r::holds(&r::ge(r::field(row, "overall_rating"), r::Val::Num(0.0_f64))) {
-            shadow.push(Violation::new("overall_rating", "non_negative", "overall_rating must not be negative"));
+            refuse.push(Violation::new("overall_rating", "non_negative", "overall_rating must not be negative"));
         }
         GuardOutcome { refuse, shadow }
     }

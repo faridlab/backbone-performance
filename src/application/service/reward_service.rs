@@ -56,7 +56,7 @@ impl backbone_core::write_guard::WriteGuard<Reward> for RewardRowRules {
         };
         let row = &row;
         let old = ctx.before.and_then(|b| serde_json::to_value(b).ok());
-        let mut shadow = Vec::new();
+        let shadow = Vec::new();
         let mut refuse = Vec::new();
         // `employee_id_required` (@required on Reward.employee_id)
         if (create || (update && r::changed(old.as_ref(), row, &["employee_id"]))) && !r::holds(&r::and(r::is_not_null(r::field(row, "employee_id")), r::not(r::is_empty(r::trim(r::field(row, "employee_id")))))) {
@@ -68,11 +68,11 @@ impl backbone_core::write_guard::WriteGuard<Reward> for RewardRowRules {
         }
         // `title_max_length` (@max(180) on Reward.title)
         if (create || (update && r::changed(old.as_ref(), row, &["title"]))) && !r::holds(&r::le(r::length(r::field(row, "title")), r::Val::Num(180.0_f64))) {
-            shadow.push(Violation::new("title", "max_length", "title must be at most 180 characters").with_param("max", 180_i64));
+            refuse.push(Violation::new("title", "max_length", "title must be at most 180 characters").with_param("max", 180_i64));
         }
         // `amount_non_negative` (@non_negative on Reward.amount)
         if (create || (update && r::changed(old.as_ref(), row, &["amount"]))) && !r::holds(&r::ge(r::field(row, "amount"), r::Val::Num(0.0_f64))) {
-            shadow.push(Violation::new("amount", "non_negative", "amount must not be negative"));
+            refuse.push(Violation::new("amount", "non_negative", "amount must not be negative"));
         }
         GuardOutcome { refuse, shadow }
     }
