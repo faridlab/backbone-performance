@@ -25,6 +25,8 @@ user_owned:
   # guard is hand-authored logic, not schema-derived emission).
   - "migrations/20260909120000_strip_tenancy.up.sql"
   - "migrations/20260909120000_strip_tenancy.down.sql"
+  - "migrations/20260909120003_rename_talent_matrix_box_to_box_label.up.sql"
+  - "migrations/20260909120003_rename_talent_matrix_box_to_box_label.down.sql"
 
   # Behavior tests (the golden cases / oracle) + BDD features.
   - "tests/features/**"

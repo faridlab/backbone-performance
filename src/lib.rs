@@ -216,27 +216,27 @@ impl PerformanceModuleBuilder {
 
         // Appraisal service
         let appraisal_repository = Arc::new(AppraisalRepository::new(db_pool.clone()));
-        let appraisal_service = Arc::new(AppraisalService::with_repository(appraisal_repository.clone()).with_guard(Arc::new(crate::application::service::AppraisalRowRules)));
+        let appraisal_service = Arc::new(crate::application::service::build_appraisal_service(appraisal_repository.clone()));
 
         // AppraisalCycle service
         let appraisal_cycle_repository = Arc::new(AppraisalCycleRepository::new(db_pool.clone()));
-        let appraisal_cycle_service = Arc::new(AppraisalCycleService::with_repository(appraisal_cycle_repository.clone()).with_guard(Arc::new(crate::application::service::AppraisalCycleRowRules)));
+        let appraisal_cycle_service = Arc::new(crate::application::service::build_appraisal_cycle_service(appraisal_cycle_repository.clone()));
 
         // Feedback service
         let feedback_repository = Arc::new(FeedbackRepository::new(db_pool.clone()));
-        let feedback_service = Arc::new(FeedbackService::with_repository(feedback_repository.clone()).with_guard(Arc::new(crate::application::service::FeedbackRowRules)));
+        let feedback_service = Arc::new(crate::application::service::build_feedback_service(feedback_repository.clone()));
 
         // Goal service
         let goal_repository = Arc::new(GoalRepository::new(db_pool.clone()));
-        let goal_service = Arc::new(GoalService::with_repository(goal_repository.clone()).with_guard(Arc::new(crate::application::service::GoalRowRules)));
+        let goal_service = Arc::new(crate::application::service::build_goal_service(goal_repository.clone()));
 
         // Reward service
         let reward_repository = Arc::new(RewardRepository::new(db_pool.clone()));
-        let reward_service = Arc::new(RewardService::with_repository(reward_repository.clone()).with_guard(Arc::new(crate::application::service::RewardRowRules)));
+        let reward_service = Arc::new(crate::application::service::build_reward_service(reward_repository.clone()));
 
         // TalentMatrixEntry service
         let talent_matrix_entry_repository = Arc::new(TalentMatrixEntryRepository::new(db_pool.clone()));
-        let talent_matrix_entry_service = Arc::new(TalentMatrixEntryService::with_repository(talent_matrix_entry_repository.clone()).with_guard(Arc::new(crate::application::service::TalentMatrixEntryRowRules)));
+        let talent_matrix_entry_service = Arc::new(crate::application::service::build_talent_matrix_entry_service(talent_matrix_entry_repository.clone()));
 
 
         // The extension builds its own state from what the generated build made.

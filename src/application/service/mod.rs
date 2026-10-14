@@ -28,5 +28,53 @@ pub use goal_service::GoalRowRules;
 pub use reward_service::RewardRowRules;
 pub use talent_matrix_entry_service::TalentMatrixEntryRowRules;
 
+/// A `AppraisalService` over `repository` with its write guard attached: the way to build it, so its writes are
+/// served only with the rules the schema declares.
+pub fn build_appraisal_service(
+    repository: std::sync::Arc<crate::infrastructure::persistence::AppraisalRepository>,
+) -> AppraisalService {
+    AppraisalService::with_repository(repository).with_guard(std::sync::Arc::new(AppraisalRowRules))
+}
+
+/// A `AppraisalCycleService` over `repository` with its write guard attached: the way to build it, so its writes are
+/// served only with the rules the schema declares.
+pub fn build_appraisal_cycle_service(
+    repository: std::sync::Arc<crate::infrastructure::persistence::AppraisalCycleRepository>,
+) -> AppraisalCycleService {
+    AppraisalCycleService::with_repository(repository).with_guard(std::sync::Arc::new(AppraisalCycleRowRules))
+}
+
+/// A `FeedbackService` over `repository` with its write guard attached: the way to build it, so its writes are
+/// served only with the rules the schema declares.
+pub fn build_feedback_service(
+    repository: std::sync::Arc<crate::infrastructure::persistence::FeedbackRepository>,
+) -> FeedbackService {
+    FeedbackService::with_repository(repository).with_guard(std::sync::Arc::new(FeedbackRowRules))
+}
+
+/// A `GoalService` over `repository` with its write guard attached: the way to build it, so its writes are
+/// served only with the rules the schema declares.
+pub fn build_goal_service(
+    repository: std::sync::Arc<crate::infrastructure::persistence::GoalRepository>,
+) -> GoalService {
+    GoalService::with_repository(repository).with_guard(std::sync::Arc::new(GoalRowRules))
+}
+
+/// A `RewardService` over `repository` with its write guard attached: the way to build it, so its writes are
+/// served only with the rules the schema declares.
+pub fn build_reward_service(
+    repository: std::sync::Arc<crate::infrastructure::persistence::RewardRepository>,
+) -> RewardService {
+    RewardService::with_repository(repository).with_guard(std::sync::Arc::new(RewardRowRules))
+}
+
+/// A `TalentMatrixEntryService` over `repository` with its write guard attached: the way to build it, so its writes are
+/// served only with the rules the schema declares.
+pub fn build_talent_matrix_entry_service(
+    repository: std::sync::Arc<crate::infrastructure::persistence::TalentMatrixEntryRepository>,
+) -> TalentMatrixEntryService {
+    TalentMatrixEntryService::with_repository(repository).with_guard(std::sync::Arc::new(TalentMatrixEntryRowRules))
+}
+
 // This directory's extension (hand-written; ADR-0031).
 include!("mod.ext.rs");
