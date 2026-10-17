@@ -13,6 +13,7 @@ pub enum CycleStatus {
     Open,
     Calibration,
     Closed,
+    Cancelled,
 }
 
 impl std::fmt::Display for CycleStatus {
@@ -22,6 +23,7 @@ impl std::fmt::Display for CycleStatus {
             Self::Open => write!(f, "open"),
             Self::Calibration => write!(f, "calibration"),
             Self::Closed => write!(f, "closed"),
+            Self::Cancelled => write!(f, "cancelled"),
         }
     }
 }
@@ -35,6 +37,7 @@ impl FromStr for CycleStatus {
             "open" => Ok(Self::Open),
             "calibration" => Ok(Self::Calibration),
             "closed" => Ok(Self::Closed),
+            "cancelled" => Ok(Self::Cancelled),
             _ => Err(format!("Unknown CycleStatus variant: {}", s)),
         }
     }

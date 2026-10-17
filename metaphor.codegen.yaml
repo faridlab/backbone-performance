@@ -27,9 +27,13 @@ user_owned:
   - "migrations/20260909120000_strip_tenancy.down.sql"
   - "migrations/20260909120003_rename_talent_matrix_box_to_box_label.up.sql"
   - "migrations/20260909120003_rename_talent_matrix_box_to_box_label.down.sql"
+  # Appends the cancelled label to cycle_status (enum labels are append-only).
+  - "migrations/20261017120000_add_cancelled_cycle_status.up.sql"
+  - "migrations/20261017120000_add_cancelled_cycle_status.down.sql"
 
   # Behavior tests (the golden cases / oracle) + BDD features.
   - "tests/features/**"
+  - "tests/cycle_cancel.rs"
   # - "tests/*_golden_cases.rs"
   # - "tests/integrity_probes.rs"
 

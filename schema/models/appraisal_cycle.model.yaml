@@ -54,3 +54,5 @@ enums:
       - name: open
       - name: calibration
       - name: closed
+      - name: cancelled
+        description: "Called off before it closed; reachable from any state before closed"
