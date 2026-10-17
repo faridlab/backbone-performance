@@ -39,7 +39,12 @@ pub struct CreateAppraisalCycleDto {
     #[cfg_attr(feature = "openapi", schema(example = "2024-01-01"))]
     #[serde(alias = "period_end")]
     pub period_end: NaiveDate,
+    #[serde(default = "default_create_appraisal_cycle_status")]
     pub status: CycleStatus,
+}
+
+fn default_create_appraisal_cycle_status() -> CycleStatus {
+    CycleStatus::Draft
 }
 
 // =============================================================================
@@ -82,8 +87,8 @@ pub struct PatchAppraisalCycleDto {
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_type")]
-    pub cycle_type: Option<String>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "cycle_type")]
+    pub cycle_type: Option<Option<String>>,
     #[cfg_attr(feature = "openapi", schema(example = "2024-01-01"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "period_start")]
     pub period_start: Option<NaiveDate>,
@@ -261,12 +266,4 @@ impl backbone_core::ApplyUpdateDto<UpdateAppraisalCycleDto> for AppraisalCycle {
         Ok(self)
     }
 }
-
-// =============================================================================
-// Custom DTOs
-// =============================================================================
-
-// Add custom DTOs specific to AppraisalCycle here.
-// This section will be preserved during regeneration.
-// >>> END CUSTOM DTOs
 

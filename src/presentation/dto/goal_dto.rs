@@ -45,7 +45,12 @@ pub struct CreateGoalDto {
     pub progress: Option<Decimal>,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "parent_goal_id")]
     pub parent_goal_id: Option<Uuid>,
+    #[serde(default = "default_create_goal_status")]
     pub status: GoalStatus,
+}
+
+fn default_create_goal_status() -> GoalStatus {
+    GoalStatus::Draft
 }
 
 // =============================================================================
@@ -93,19 +98,19 @@ pub struct PatchGoalDto {
     #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "employee_id")]
     pub employee_id: Option<Uuid>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
-    pub cycle_id: Option<Uuid>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "cycle_id")]
+    pub cycle_id: Option<Option<Uuid>>,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub weight: Option<Decimal>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub progress: Option<Decimal>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "parent_goal_id")]
-    pub parent_goal_id: Option<Uuid>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option")]
+    pub description: Option<Option<String>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option")]
+    pub weight: Option<Option<Decimal>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option")]
+    pub progress: Option<Option<Decimal>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "parent_goal_id")]
+    pub parent_goal_id: Option<Option<Uuid>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<GoalStatus>,
 }
@@ -291,12 +296,4 @@ impl backbone_core::ApplyUpdateDto<UpdateGoalDto> for Goal {
         Ok(self)
     }
 }
-
-// =============================================================================
-// Custom DTOs
-// =============================================================================
-
-// Add custom DTOs specific to Goal here.
-// This section will be preserved during regeneration.
-// >>> END CUSTOM DTOs
 

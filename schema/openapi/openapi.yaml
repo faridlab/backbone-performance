@@ -2286,8 +2286,6 @@ components:
         - employee_id
         - cycle_id
         - reviewer_id
-        - status
-        - metadata
       properties:
         employee_id:
           type: string
@@ -2317,8 +2315,6 @@ components:
           nullable: true
           type: string
           format: date-time
-        metadata:
-          type: object
 
     UpdateAppraisalRequest:
       type: object
@@ -2327,7 +2323,6 @@ components:
         - cycle_id
         - reviewer_id
         - status
-        - metadata
       properties:
         employee_id:
           type: string
@@ -2357,8 +2352,6 @@ components:
           nullable: true
           type: string
           format: date-time
-        metadata:
-          type: object
 
     PatchAppraisalRequest:
       type: object
@@ -2391,8 +2384,6 @@ components:
           nullable: true
           type: string
           format: date-time
-        metadata:
-          type: object
 
     AppraisalList:
       type: object
@@ -2454,8 +2445,6 @@ components:
         - name
         - period_start
         - period_end
-        - status
-        - metadata
       properties:
         name:
           type: string
@@ -2472,8 +2461,6 @@ components:
           format: date
         status:
           type: string
-        metadata:
-          type: object
 
     UpdateAppraisalCycleRequest:
       type: object
@@ -2482,7 +2469,6 @@ components:
         - period_start
         - period_end
         - status
-        - metadata
       properties:
         name:
           type: string
@@ -2499,8 +2485,6 @@ components:
           format: date
         status:
           type: string
-        metadata:
-          type: object
 
     PatchAppraisalCycleRequest:
       type: object
@@ -2520,8 +2504,6 @@ components:
           format: date
         status:
           type: string
-        metadata:
-          type: object
 
     AppraisalCycleList:
       type: object
@@ -2585,9 +2567,6 @@ components:
         - from_employee_id
         - to_employee_id
         - content
-        - is_anonymous
-        - relationship
-        - metadata
       properties:
         cycle_id:
           nullable: true
@@ -2605,8 +2584,6 @@ components:
           type: boolean
         relationship:
           type: string
-        metadata:
-          type: object
 
     UpdateFeedbackRequest:
       type: object
@@ -2616,7 +2593,6 @@ components:
         - content
         - is_anonymous
         - relationship
-        - metadata
       properties:
         cycle_id:
           nullable: true
@@ -2634,8 +2610,6 @@ components:
           type: boolean
         relationship:
           type: string
-        metadata:
-          type: object
 
     PatchFeedbackRequest:
       type: object
@@ -2656,8 +2630,6 @@ components:
           type: boolean
         relationship:
           type: string
-        metadata:
-          type: object
 
     FeedbackList:
       type: object
@@ -2727,8 +2699,6 @@ components:
       required:
         - employee_id
         - title
-        - status
-        - metadata
       properties:
         employee_id:
           type: string
@@ -2755,8 +2725,6 @@ components:
           format: uuid
         status:
           type: string
-        metadata:
-          type: object
 
     UpdateGoalRequest:
       type: object
@@ -2764,7 +2732,6 @@ components:
         - employee_id
         - title
         - status
-        - metadata
       properties:
         employee_id:
           type: string
@@ -2791,8 +2758,6 @@ components:
           format: uuid
         status:
           type: string
-        metadata:
-          type: object
 
     PatchGoalRequest:
       type: object
@@ -2822,8 +2787,6 @@ components:
           format: uuid
         status:
           type: string
-        metadata:
-          type: object
 
     GoalList:
       type: object
@@ -2897,10 +2860,8 @@ components:
       type: object
       required:
         - employee_id
-        - reward_type
         - title
         - awarded_at
-        - metadata
       properties:
         employee_id:
           type: string
@@ -2931,8 +2892,6 @@ components:
           nullable: true
           type: string
           format: uuid
-        metadata:
-          type: object
 
     UpdateRewardRequest:
       type: object
@@ -2941,7 +2900,6 @@ components:
         - reward_type
         - title
         - awarded_at
-        - metadata
       properties:
         employee_id:
           type: string
@@ -2972,8 +2930,6 @@ components:
           nullable: true
           type: string
           format: uuid
-        metadata:
-          type: object
 
     PatchRewardRequest:
       type: object
@@ -3007,8 +2963,6 @@ components:
           nullable: true
           type: string
           format: uuid
-        metadata:
-          type: object
 
     RewardList:
       type: object
@@ -3072,7 +3026,6 @@ components:
         - cycle_id
         - performance_score
         - potential_score
-        - metadata
       properties:
         employee_id:
           type: string
@@ -3090,8 +3043,6 @@ components:
           nullable: true
           type: string
           maxLength: 40
-        metadata:
-          type: object
 
     UpdateTalentMatrixEntryRequest:
       type: object
@@ -3100,7 +3051,6 @@ components:
         - cycle_id
         - performance_score
         - potential_score
-        - metadata
       properties:
         employee_id:
           type: string
@@ -3118,8 +3068,6 @@ components:
           nullable: true
           type: string
           maxLength: 40
-        metadata:
-          type: object
 
     PatchTalentMatrixEntryRequest:
       type: object
@@ -3140,8 +3088,6 @@ components:
           nullable: true
           type: string
           maxLength: 40
-        metadata:
-          type: object
 
     TalentMatrixEntryList:
       type: object

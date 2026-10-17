@@ -40,9 +40,14 @@ pub struct CreateFeedbackDto {
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     pub content: String,
     #[cfg_attr(feature = "openapi", schema(example = true))]
-    #[serde(alias = "is_anonymous")]
+    #[serde(default, alias = "is_anonymous")]
     pub is_anonymous: bool,
+    #[serde(default = "default_create_feedback_relationship")]
     pub relationship: FeedbackRelationship,
+}
+
+fn default_create_feedback_relationship() -> FeedbackRelationship {
+    FeedbackRelationship::Peer
 }
 
 // =============================================================================
@@ -85,8 +90,8 @@ pub struct UpdateFeedbackDto {
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct PatchFeedbackDto {
-    #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
-    pub cycle_id: Option<Uuid>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "cycle_id")]
+    pub cycle_id: Option<Option<Uuid>>,
     #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "from_employee_id")]
     pub from_employee_id: Option<Uuid>,
@@ -276,12 +281,4 @@ impl backbone_core::ApplyUpdateDto<UpdateFeedbackDto> for Feedback {
         Ok(self)
     }
 }
-
-// =============================================================================
-// Custom DTOs
-// =============================================================================
-
-// Add custom DTOs specific to Feedback here.
-// This section will be preserved during regeneration.
-// >>> END CUSTOM DTOs
 

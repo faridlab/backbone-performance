@@ -35,7 +35,7 @@ pub struct CreateRewardDto {
     pub employee_id: Uuid,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "cycle_id")]
     pub cycle_id: Option<Uuid>,
-    #[serde(alias = "reward_type")]
+    #[serde(default = "default_create_reward_reward_type", alias = "reward_type")]
     pub reward_type: RewardType,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     pub title: String,
@@ -50,6 +50,10 @@ pub struct CreateRewardDto {
     pub awarded_at: NaiveDate,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "payroll_component_id")]
     pub payroll_component_id: Option<Uuid>,
+}
+
+fn default_create_reward_reward_type() -> RewardType {
+    RewardType::Recognition
 }
 
 // =============================================================================
@@ -101,24 +105,24 @@ pub struct PatchRewardDto {
     #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "employee_id")]
     pub employee_id: Option<Uuid>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "cycle_id")]
-    pub cycle_id: Option<Uuid>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "cycle_id")]
+    pub cycle_id: Option<Option<Uuid>>,
     #[serde(skip_serializing_if = "Option::is_none", alias = "reward_type")]
     pub reward_type: Option<RewardType>,
     #[cfg_attr(feature = "openapi", schema(example = "example"))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub amount: Option<Decimal>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "awarded_by")]
-    pub awarded_by: Option<Uuid>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option")]
+    pub description: Option<Option<String>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option")]
+    pub amount: Option<Option<Decimal>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "awarded_by")]
+    pub awarded_by: Option<Option<Uuid>>,
     #[cfg_attr(feature = "openapi", schema(example = "2024-01-01"))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "awarded_at")]
     pub awarded_at: Option<NaiveDate>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "payroll_component_id")]
-    pub payroll_component_id: Option<Uuid>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "payroll_component_id")]
+    pub payroll_component_id: Option<Option<Uuid>>,
 }
 
 impl PatchRewardDto {
@@ -308,12 +312,4 @@ impl backbone_core::ApplyUpdateDto<UpdateRewardDto> for Reward {
         Ok(self)
     }
 }
-
-// =============================================================================
-// Custom DTOs
-// =============================================================================
-
-// Add custom DTOs specific to Reward here.
-// This section will be preserved during regeneration.
-// >>> END CUSTOM DTOs
 

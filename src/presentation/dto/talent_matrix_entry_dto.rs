@@ -96,8 +96,8 @@ pub struct PatchTalentMatrixEntryDto {
     #[cfg_attr(feature = "openapi", schema(example = 42))]
     #[serde(skip_serializing_if = "Option::is_none", alias = "potential_score")]
     pub potential_score: Option<i32>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "box_label")]
-    pub box_label: Option<String>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "box_label")]
+    pub box_label: Option<Option<String>>,
 }
 
 impl PatchTalentMatrixEntryDto {
@@ -268,12 +268,4 @@ impl backbone_core::ApplyUpdateDto<UpdateTalentMatrixEntryDto> for TalentMatrixE
         Ok(self)
     }
 }
-
-// =============================================================================
-// Custom DTOs
-// =============================================================================
-
-// Add custom DTOs specific to TalentMatrixEntry here.
-// This section will be preserved during regeneration.
-// >>> END CUSTOM DTOs
 

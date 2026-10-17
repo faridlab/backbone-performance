@@ -39,6 +39,7 @@ pub struct CreateAppraisalDto {
     #[cfg_attr(feature = "openapi", schema(example = "550e8400-e29b-41d4-a716-446655440000"))]
     #[serde(alias = "reviewer_id")]
     pub reviewer_id: Uuid,
+    #[serde(default = "default_create_appraisal_status")]
     pub status: AppraisalStatus,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "overall_rating")]
     pub overall_rating: Option<Decimal>,
@@ -50,6 +51,10 @@ pub struct CreateAppraisalDto {
     pub manager_review: Option<serde_json::Value>,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "rated_at")]
     pub rated_at: Option<DateTime<Utc>>,
+}
+
+fn default_create_appraisal_status() -> AppraisalStatus {
+    AppraisalStatus::Draft
 }
 
 // =============================================================================
@@ -109,16 +114,16 @@ pub struct PatchAppraisalDto {
     pub reviewer_id: Option<Uuid>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<AppraisalStatus>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "overall_rating")]
-    pub overall_rating: Option<Decimal>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "submitted_at")]
-    pub submitted_at: Option<DateTime<Utc>>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "self_review")]
-    pub self_review: Option<serde_json::Value>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "manager_review")]
-    pub manager_review: Option<serde_json::Value>,
-    #[serde(skip_serializing_if = "Option::is_none", alias = "rated_at")]
-    pub rated_at: Option<DateTime<Utc>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "overall_rating")]
+    pub overall_rating: Option<Option<Decimal>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "submitted_at")]
+    pub submitted_at: Option<Option<DateTime<Utc>>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "self_review")]
+    pub self_review: Option<Option<serde_json::Value>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "manager_review")]
+    pub manager_review: Option<Option<serde_json::Value>>,
+    #[serde(default, deserialize_with = "crate::presentation::dto::double_option", alias = "rated_at")]
+    pub rated_at: Option<Option<DateTime<Utc>>>,
 }
 
 impl PatchAppraisalDto {
@@ -308,12 +313,4 @@ impl backbone_core::ApplyUpdateDto<UpdateAppraisalDto> for Appraisal {
         Ok(self)
     }
 }
-
-// =============================================================================
-// Custom DTOs
-// =============================================================================
-
-// Add custom DTOs specific to Appraisal here.
-// This section will be preserved during regeneration.
-// >>> END CUSTOM DTOs
 
