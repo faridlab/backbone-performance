@@ -82,6 +82,13 @@ impl axum::response::IntoResponse for RewardError {
 // Route Configuration
 // =============================================================================
 
+/// The permissions this entity's generic routes require: `reward:<action>` for `read`, `create`,
+/// `update`, `delete`, `restore` and `purge`, with any rename the schema's `requires:` declares.
+pub fn reward_permissions() -> backbone_core::http::CrudPermissions {
+    backbone_core::http::CrudPermissions::new("reward")
+        .in_module("performance")
+}
+
 /// Create Axum router with all 16 Backbone endpoints for Reward.
 ///
 /// # Routes
@@ -111,21 +118,23 @@ impl axum::response::IntoResponse for RewardError {
 /// let router = create_reward_routes(service);
 /// ```
 pub fn create_reward_routes(service: Arc<RewardService>) -> Router {
-    BackboneCrudHandler::<RewardService, Reward, CreateRewardDto, UpdateRewardDto, RewardResponseDto>::routes(
+    BackboneCrudHandler::<RewardService, Reward, CreateRewardDto, UpdateRewardDto, RewardResponseDto>::routes_guarded(
         service,
         "/rewards",
+        reward_permissions(),
     )
 }
 
 /// Create Axum router with only the read (GET) endpoints for Reward.
 ///
-/// Safe for public, unauthenticated exposure (e.g., reference data).
+/// Each route requires the entity's `read` permission, so it needs an authenticated caller.
 /// Mutations must be served separately via `create_reward_write_routes`,
 /// typically wrapped in an auth middleware layer.
 pub fn create_reward_read_routes(service: Arc<RewardService>) -> Router {
-    BackboneCrudHandler::<RewardService, Reward, CreateRewardDto, UpdateRewardDto, RewardResponseDto>::read_routes(
+    BackboneCrudHandler::<RewardService, Reward, CreateRewardDto, UpdateRewardDto, RewardResponseDto>::read_routes_guarded(
         service,
         "/rewards",
+        reward_permissions(),
     )
 }
 
@@ -141,9 +150,10 @@ pub fn create_reward_read_routes(service: Arc<RewardService>) -> Router {
 /// service (e.g. a command router over its domain engine), serve THAT instead
 /// for any mutation that must respect domain rules.
 pub fn create_reward_write_routes(service: Arc<RewardService>) -> Router {
-    BackboneCrudHandler::<RewardService, Reward, CreateRewardDto, UpdateRewardDto, RewardResponseDto>::write_routes(
+    BackboneCrudHandler::<RewardService, Reward, CreateRewardDto, UpdateRewardDto, RewardResponseDto>::write_routes_guarded(
         service,
         "/rewards",
+        reward_permissions(),
     )
 }
 

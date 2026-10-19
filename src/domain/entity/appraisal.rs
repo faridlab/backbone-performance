@@ -233,6 +233,12 @@ impl super::Entity for Appraisal {
 }
 
 impl backbone_core::PersistentEntity for Appraisal {
+    fn references() -> &'static [backbone_core::Reference] {
+        const REFERENCES: &[backbone_core::Reference] = &[
+            backbone_core::Reference::new("cycle_id", "performance.appraisal_cycles", "id"),
+        ];
+        REFERENCES
+    }
     fn entity_id(&self) -> String {
         self.id.to_string()
     }

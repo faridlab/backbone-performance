@@ -81,6 +81,13 @@ impl axum::response::IntoResponse for AppraisalCycleError {
 // Route Configuration
 // =============================================================================
 
+/// The permissions this entity's generic routes require: `appraisal_cycle:<action>` for `read`, `create`,
+/// `update`, `delete`, `restore` and `purge`, with any rename the schema's `requires:` declares.
+pub fn appraisal_cycle_permissions() -> backbone_core::http::CrudPermissions {
+    backbone_core::http::CrudPermissions::new("appraisal_cycle")
+        .in_module("performance")
+}
+
 /// Create Axum router with all 16 Backbone endpoints for AppraisalCycle.
 ///
 /// # Routes
@@ -110,21 +117,23 @@ impl axum::response::IntoResponse for AppraisalCycleError {
 /// let router = create_appraisal_cycle_routes(service);
 /// ```
 pub fn create_appraisal_cycle_routes(service: Arc<AppraisalCycleService>) -> Router {
-    BackboneCrudHandler::<AppraisalCycleService, AppraisalCycle, CreateAppraisalCycleDto, UpdateAppraisalCycleDto, AppraisalCycleResponseDto>::routes(
+    BackboneCrudHandler::<AppraisalCycleService, AppraisalCycle, CreateAppraisalCycleDto, UpdateAppraisalCycleDto, AppraisalCycleResponseDto>::routes_guarded(
         service,
         "/appraisal_cycles",
+        appraisal_cycle_permissions(),
     )
 }
 
 /// Create Axum router with only the read (GET) endpoints for AppraisalCycle.
 ///
-/// Safe for public, unauthenticated exposure (e.g., reference data).
+/// Each route requires the entity's `read` permission, so it needs an authenticated caller.
 /// Mutations must be served separately via `create_appraisal_cycle_write_routes`,
 /// typically wrapped in an auth middleware layer.
 pub fn create_appraisal_cycle_read_routes(service: Arc<AppraisalCycleService>) -> Router {
-    BackboneCrudHandler::<AppraisalCycleService, AppraisalCycle, CreateAppraisalCycleDto, UpdateAppraisalCycleDto, AppraisalCycleResponseDto>::read_routes(
+    BackboneCrudHandler::<AppraisalCycleService, AppraisalCycle, CreateAppraisalCycleDto, UpdateAppraisalCycleDto, AppraisalCycleResponseDto>::read_routes_guarded(
         service,
         "/appraisal_cycles",
+        appraisal_cycle_permissions(),
     )
 }
 
@@ -140,9 +149,10 @@ pub fn create_appraisal_cycle_read_routes(service: Arc<AppraisalCycleService>) -
 /// service (e.g. a command router over its domain engine), serve THAT instead
 /// for any mutation that must respect domain rules.
 pub fn create_appraisal_cycle_write_routes(service: Arc<AppraisalCycleService>) -> Router {
-    BackboneCrudHandler::<AppraisalCycleService, AppraisalCycle, CreateAppraisalCycleDto, UpdateAppraisalCycleDto, AppraisalCycleResponseDto>::write_routes(
+    BackboneCrudHandler::<AppraisalCycleService, AppraisalCycle, CreateAppraisalCycleDto, UpdateAppraisalCycleDto, AppraisalCycleResponseDto>::write_routes_guarded(
         service,
         "/appraisal_cycles",
+        appraisal_cycle_permissions(),
     )
 }
 

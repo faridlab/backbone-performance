@@ -181,6 +181,12 @@ impl super::Entity for TalentMatrixEntry {
 }
 
 impl backbone_core::PersistentEntity for TalentMatrixEntry {
+    fn references() -> &'static [backbone_core::Reference] {
+        const REFERENCES: &[backbone_core::Reference] = &[
+            backbone_core::Reference::new("cycle_id", "performance.appraisal_cycles", "id"),
+        ];
+        REFERENCES
+    }
     fn entity_id(&self) -> String {
         self.id.to_string()
     }

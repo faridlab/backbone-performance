@@ -228,6 +228,13 @@ impl super::Entity for Goal {
 }
 
 impl backbone_core::PersistentEntity for Goal {
+    fn references() -> &'static [backbone_core::Reference] {
+        const REFERENCES: &[backbone_core::Reference] = &[
+            backbone_core::Reference::new("cycle_id", "performance.appraisal_cycles", "id"),
+            backbone_core::Reference::new("parent_goal_id", "performance.goals", "id"),
+        ];
+        REFERENCES
+    }
     fn entity_id(&self) -> String {
         self.id.to_string()
     }
